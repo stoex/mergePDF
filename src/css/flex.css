@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-top: 30px;
+}
+
+.foldertree {
+  flex-grow: 1;
+  margin-left: 30px;
+  margin-right: 30px;
+  max-width: 400px;
+}
+
+.filecard {
+}
