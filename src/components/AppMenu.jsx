@@ -5,20 +5,19 @@ class AppMenu extends Component {
     return (
       <nav className={"pt-navbar pt-dark"}>
         <div className={"pt-navbar-group pt-align-left"}>
-          <input
-            className={"pt-input"}
-            placeholder={"Search files..."}
-            type={"text"}
-          />
-        </div>
-        <div className={"pt-navbar-group pt-align-right"}>
           <button className={"pt-button pt-minimal pt-icon-document"}>
             {"Files"}
           </button>
           <button className={"pt-button pt-minimal pt-icon-home"}>
             {"Merge"}
           </button>
-
+        </div>
+        <div className={"pt-navbar-group pt-align-right"}>
+          <input
+            className={"pt-input"}
+            placeholder={"Search files..."}
+            type={"text"}
+          />
           <span className={"pt-navbar-divider"} />
           <button className={"pt-button pt-minimal pt-icon-cog"} />
         </div>

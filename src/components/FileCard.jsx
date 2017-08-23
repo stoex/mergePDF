@@ -28,13 +28,17 @@ class FileCard extends Component {
   render() {
     return (
       <div className={"pt-card pt-elevation-0"}>
-        <h5>Filename.pdf</h5>
         <div>
-          <Button iconName="document-open" />
-          <Button iconName="trash" />
+          <h5>Filename.pdf</h5>
+          <p>Pages: 23</p>
+        </div>
+        <div>
+          <Button iconName="document-open" className={"pt-minimal"} />
+          <Button iconName="trash" className={"pt-minimal"} />
           <AnchorButton
             iconName={this.state.isOpen ? "caret-down" : "caret-up"}
             onClick={this.handleClick}
+            className={"pt-minimal"}
           />
           <Collapse isOpen={this.state.isOpen}>
             <RadioGroup

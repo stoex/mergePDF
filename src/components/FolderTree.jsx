@@ -65,15 +65,13 @@ class FolderTree extends Component {
       return <NoFolderSelection />;
     } else {
       return (
-        <div className={"pt-elevation-2"}>
-          <Tree
-            contents={this.state.nodes}
-            onNodeClick={this.handleNodeClick}
-            onNodeCollapse={this.handleNodeCollapse}
-            onNodeExpand={this.handleNodeExpand}
-            className={Classes.ELEVATION_0}
-          />
-        </div>
+        <Tree
+          contents={this.state.nodes}
+          onNodeClick={this.handleNodeClick}
+          onNodeCollapse={this.handleNodeCollapse}
+          onNodeExpand={this.handleNodeExpand}
+          className={Classes.ELEVATION_0}
+        />
       );
     }
   }
