@@ -2,7 +2,8 @@ import React, { Component } from "react";
 
 import { Classes, Tooltip, Tree } from "@blueprintjs/core";
 import NoFolderSelection from "./NoFolderSelection";
-
+const electron = window.require("electron");
+const ipcRenderer = electron.ipcRenderer;
 class FolderTree extends Component {
   constructor() {
     super();
@@ -18,7 +19,8 @@ class FolderTree extends Component {
         {
           hasCaret: true,
           iconName: "folder-close",
-          label: "Folder 0"
+          label: "Folder 0",
+          childNodes: []
         },
         {
           iconName: "folder-close",
@@ -59,6 +61,18 @@ class FolderTree extends Component {
   shouldComponentUpdate() {
     return true;
   }
+
+  componentDidMount = () => {
+    ipcRenderer.on("directory-data", (e, a) => {
+      this.receiveState(a);
+    });
+  };
+
+  componentWillUnmount = () => {
+    ipcRenderer.removeListener("directory-data", (e, a) => {
+      this.receiveState(a);
+    });
+  };
 
   render() {
     if (this.state.nodes.length === 0) {

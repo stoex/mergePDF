@@ -6,7 +6,7 @@ class AppMenu extends Component {
       <nav className={"pt-navbar pt-dark"}>
         <div className={"pt-navbar-group pt-align-left"}>
           <button className={"pt-button pt-minimal pt-icon-document"}>
-            {"Files"}
+            {"Choose Folder"}
           </button>
           <button className={"pt-button pt-minimal pt-icon-home"}>
             {"Merge"}

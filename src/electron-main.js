@@ -1,24 +1,18 @@
+const electron = require("electron");
 const {
   default: installExtension,
   REACT_DEVELOPER_TOOLS
 } = require("electron-devtools-installer");
-
-installExtension(REACT_DEVELOPER_TOOLS)
-  .then(name => console.log(`Added Extension:  ${name}`))
-  .catch(err => console.log("An error occurred: ", err));
-
-const electron = require("electron");
-// Module to control application life.
+const glob = require("glob");
+const Path = require("path");
+const fs = require("fs");
+const os = require("os").platform();
+const pdf = require("pdfjs-dist");
 const app = electron.app;
-// Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
-
-const path = require("path");
 const url = require("url");
-
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
-let mainWindow;
+const { dialog, ipcMain } = electron;
+var mainWindow;
 
 function createWindow() {
   // Create the browser window.
@@ -28,7 +22,7 @@ function createWindow() {
   const startUrl =
     process.env.ELECTRON_START_URL ||
     url.format({
-      pathname: path.join(__dirname, "/../build/index.html"),
+      pathname: Path.join(__dirname, "/../build/index.html"),
       protocol: "file:",
       slashes: true
     });
@@ -48,7 +42,12 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on("ready", createWindow);
+app.on("ready", () => {
+  createWindow();
+  installExtension(REACT_DEVELOPER_TOOLS)
+    .then(name => console.log(`Added Extension:  ${name}`))
+    .catch(err => console.log("An error occurred: ", err));
+});
 
 // Quit when all windows are closed.
 app.on("window-all-closed", function() {
@@ -69,3 +68,85 @@ app.on("activate", function() {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+const randomID = () => {
+  let len = 5;
+  let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let i;
+  let seq = "";
+
+  const randomInt = (low, high) => {
+    return Math.floor(Math.random() * (high - low + 1)) + low;
+  };
+
+  const randomChar = str => {
+    return str.charAt(randomInt(0, str.length - 1));
+  };
+  for (i = 1; i <= len; i++) {
+    seq += randomChar(letters);
+  }
+  return seq;
+};
+
+const createDataArray = data => {
+  let arr = [];
+  let file;
+  data.map(i => {
+    if (os === "win32") {
+      i = i.replace(/\//g, "\\");
+      file = Path.basename(i);
+    } else {
+      file = Path.posix.basename(i);
+    }
+    const folder = Path.dirname(i);
+    const split = folder.split(Path.sep);
+    const folderTitle = split.slice(-1)[0];
+    const folderObject = {
+      folderPath: folder,
+      folderTitle: folderTitle,
+      files: []
+    };
+    const fileObj = {
+      ID: randomID(),
+      fileTitle: file,
+      path: i,
+      hidden: false
+    };
+    const idxFolder = arr.map(o => o.folderPath).indexOf(folder);
+    switch (idxFolder) {
+      case -1:
+        arr.push(folderObject);
+        arr[arr.length - 1].files.push(fileObj);
+        break;
+      default:
+        arr[idxFolder].files.push(fileObj);
+        break;
+    }
+  });
+  return arr;
+};
+
+const listFiles = (src, cb) => {
+  glob(src + "/**/*.pdf", cb);
+};
+
+const openDirectory = () => {
+  dialog.showOpenDialog(
+    {
+      properties: ["openDirectory"]
+    },
+    dir => {
+      listFiles(dir, (err, res) => {
+        if (err) {
+          dialog.showErrorBox(`An error occured.`, `${err}`);
+        } else {
+          data = createDataArray(res);
+          mainWindow.webContents.send("directory-data", data);
+        }
+      });
+    }
+  );
+};
+
+ipcMain.on("open-dialog", (e, a) => {
+  openDirectory();
+});

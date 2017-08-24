@@ -6,9 +6,6 @@ import {
   Radio,
   RadioGroup
 } from "@blueprintjs/core";
-//import "normalize.css/normalize.css";
-//import "@blueprintjs/core/dist/blueprint.css";
-
 class FileCard extends Component {
   state = {
     isOpen: false,
