@@ -10,6 +10,11 @@ class FolderTree extends Component {
     this.state = {
       nodes: []
     };
+    const refreshLabel = (
+      <Tooltip content="Refresh folder">
+        <span className="pt-icon-standard pt-icon-refresh" />
+      </Tooltip>
+    );
   }
 
   shouldComponentUpdate() {
@@ -93,13 +98,16 @@ class FolderTree extends Component {
       this.forEachNode(this.state.nodes, n => {
         n.id = i++;
         if (n.hasOwnProperty("childNodes")) {
-          n.childNodes.length === 0
+          return n.childNodes.length === 0
             ? n.childNodes.push({
                 iconName: "warning-sign",
                 label: "This folder is empty."
               })
             : null;
         }
+      });
+      this.state.nodes.map(i => {
+        return (i.secondaryLabel = this.refreshLabel);
       });
       return (
         <Tree

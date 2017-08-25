@@ -36,8 +36,6 @@ Array.prototype.unique = function() {
 const listFiles = src => {
   const folderArr = glob.sync(`${src}/**/`);
   const fileArr = glob.sync(`${src}/**/*.pdf`);
-  const hrend = process.hrtime(hrstart);
-  console.info("Execution time (hr): %ds %dms", hrend[0], hrend[1] / 1000000);
   return folderArr.concat(fileArr).unique();
 };
 
@@ -122,12 +120,14 @@ const createDataArray = data => {
       createFile(i, arr);
     }
   });
-
+  const hrend = process.hrtime(hrstart);
+  console.info("Execution time (hr): %ds %dms", hrend[0], hrend[1] / 1000000);
   return arr;
 };
 
 const files = listFiles("C:\\Users\\c.nicola\\Downloads");
 
-const nodeTree = createDataArray(files);
+//const nodeTree = createDataArray(files);
 
-console.log(JSON.stringify(nodeTree));
+//console.log(JSON.stringify(nodeTree));
+console.log(files);
