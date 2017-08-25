@@ -1,94 +1,50 @@
 import React, { Component } from "react";
-
 import { Classes, Tooltip, Tree } from "@blueprintjs/core";
 import NoFolderSelection from "./NoFolderSelection";
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
+
 class FolderTree extends Component {
   constructor() {
     super();
-    const tooltipLabel = (
-      <Tooltip content="An eye!">
-        <span className="pt-icon-standard pt-icon-eye-open" />
-      </Tooltip>
-    );
-    const longLabel =
-      "Organic meditation gluten-free, sriracha VHS drinking vinegar beard man.";
     this.state = {
-      nodes: [
-        {
-          hasCaret: true,
-          iconName: "folder-close",
-          label: "Folder 0",
-          childNodes: []
-        },
-        {
-          iconName: "folder-close",
-          isExpanded: true,
-          label: <Tooltip content="I'm a folder <3">Folder 1</Tooltip>,
-          childNodes: [
-            {
-              iconName: "document",
-              label: "Item 0",
-              secondaryLabel: tooltipLabel
-            },
-            { iconName: "pt-icon-tag", label: longLabel },
-            {
-              hasCaret: true,
-              iconName: "pt-icon-folder-close",
-              label: <Tooltip content="foo">Folder 2</Tooltip>,
-              childNodes: [
-                { label: "No-Icon Item" },
-                { iconName: "pt-icon-tag", label: "Item 1" },
-                {
-                  hasCaret: true,
-                  iconName: "pt-icon-folder-close",
-                  label: "Folder 3",
-                  childNodes: [
-                    { iconName: "document", label: "Item 0" },
-                    { iconName: "pt-icon-tag", label: "Item 1" }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
+      nodes: []
     };
-    let i = 0;
-    this.forEachNode(this.state.nodes, n => (n.id = i++));
   }
+
   shouldComponentUpdate() {
     return true;
   }
 
   componentDidMount = () => {
     ipcRenderer.on("directory-data", (e, a) => {
-      this.receiveState(a);
+      console.log("received data");
+      this.receiveState(a[0]);
     });
   };
 
   componentWillUnmount = () => {
     ipcRenderer.removeListener("directory-data", (e, a) => {
-      this.receiveState(a);
+      this.receiveState(a[0]);
     });
   };
 
-  render() {
-    if (this.state.nodes.length === 0) {
-      return <NoFolderSelection />;
-    } else {
-      return (
-        <Tree
-          contents={this.state.nodes}
-          onNodeClick={this.handleNodeClick}
-          onNodeCollapse={this.handleNodeCollapse}
-          onNodeExpand={this.handleNodeExpand}
-          className={Classes.ELEVATION_0}
-        />
-      );
+  receiveState = data => {
+    let state = [].concat(this.state.nodes);
+    state.push(data);
+    this.setState({ nodes: state });
+  };
+
+  forEachNode = (nodes, callback) => {
+    if (nodes == null) {
+      return;
     }
-  }
+
+    for (const node of nodes) {
+      callback(node);
+      this.forEachNode(node.childNodes, callback);
+    }
+  };
 
   handleNodeClick = (nodeData, _nodePath, e) => {
     const originallySelected = nodeData.isSelected;
@@ -110,16 +66,52 @@ class FolderTree extends Component {
     this.setState(this.state);
   };
 
-  forEachNode = (nodes, callback) => {
-    if (nodes == null) {
-      return;
-    }
+  randomID = () => {
+    let len = 5;
+    let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let i;
+    let seq = "";
 
-    for (const node of nodes) {
-      callback(node);
-      this.forEachNode(node.childNodes, callback);
+    const randomInt = (low, high) => {
+      return Math.floor(Math.random() * (high - low + 1)) + low;
+    };
+
+    const randomChar = str => {
+      return str.charAt(randomInt(0, str.length - 1));
+    };
+    for (i = 1; i <= len; i++) {
+      seq += randomChar(letters);
     }
+    return seq;
   };
+
+  render() {
+    if (this.state.nodes.length === 0) {
+      return <NoFolderSelection />;
+    } else {
+      let i = 0;
+      this.forEachNode(this.state.nodes, n => {
+        n.id = i++;
+        if (n.hasOwnProperty("childNodes")) {
+          n.childNodes.length === 0
+            ? n.childNodes.push({
+                iconName: "warning-sign",
+                label: "This folder is empty."
+              })
+            : null;
+        }
+      });
+      return (
+        <Tree
+          contents={this.state.nodes}
+          onNodeClick={this.handleNodeClick}
+          onNodeCollapse={this.handleNodeCollapse}
+          onNodeExpand={this.handleNodeExpand}
+          className={Classes.ELEVATION_0}
+        />
+      );
+    }
+  }
 }
 
 export default FolderTree;

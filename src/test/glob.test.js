@@ -41,8 +41,29 @@ const listFiles = src => {
   return folderArr.concat(fileArr).unique();
 };
 
+const addToNode = (currentNode, label, toAdd) => {
+  if (currentNode instanceof Array) {
+    for (var i = 0; i < currentNode.length; i++) {
+      addToNode(currentNode[i], label, toAdd);
+    }
+  } else {
+    for (var prop in currentNode) {
+      if (prop == "label") {
+        if (currentNode[prop] == label) {
+          currentNode.childNodes.push(toAdd);
+        }
+      }
+      if (
+        currentNode[prop] instanceof Object ||
+        currentNode[prop] instanceof Array
+      )
+        addToNode(currentNode[prop], label, toAdd);
+    }
+  }
+};
+
 const createRootDir = (path, array) => {
-  const label = path.split(Path.sep).slice(-1)[0];
+  const label = path.split(Path.sep).slice(-2)[0];
   const obj = {
     hasCaret: true,
     iconName: "folder-close",
@@ -53,43 +74,37 @@ const createRootDir = (path, array) => {
 };
 
 const createChildDir = (path, basepath, array) => {
-  const childDir = path.replace(`${basepath}\\`, "");
-  const split = childDir.split(Path.sep);
-  const label = split.pop();
-
+  const label = path.split(Path.sep).slice(-2)[0];
+  const parent = path.split(Path.sep).slice(-3)[0];
   const obj = {
     hasCaret: true,
     iconName: "folder-close",
     label: label,
     childNodes: []
   };
-
-  if (split.length === 0) {
-    array[0].childNodes.push(obj);
-  } else {
-  }
+  addToNode(array, parent, obj);
 };
 
-const createFile = (path, position, array) => {
+const createFile = (path, array) => {
   let label;
   if (os === "win32") {
-    label = Path.basename(path);
+    label = Path.basename(path).toString();
   } else {
-    label = Path.posix.basename(path);
+    label = Path.posix.basename(path).toString();
   }
-
+  const parent = path.split(Path.sep).slice(-2)[0];
   const obj = {
     iconName: "document",
     label: label
   };
 
-  return array[position].childNodes.push(obj);
+  addToNode(array, parent, obj);
 };
 
 const createDataArray = data => {
   let arr = [];
   const basePath = data[0];
-  data.map((i, idx) => {
+  data.forEach((i, idx) => {
     let isDir;
     if (os === "win32") {
       i = i.replace(/\//g, "\\");
@@ -103,8 +118,16 @@ const createDataArray = data => {
       } else {
         createChildDir(i, basePath, arr);
       }
+    } else {
+      createFile(i, arr);
     }
   });
+
+  return arr;
 };
 
-console.log(listFiles("C:\\Users\\c.nicola\\Downloads"));
+const files = listFiles("C:\\Users\\c.nicola\\Downloads");
+
+const nodeTree = createDataArray(files);
+
+console.log(JSON.stringify(nodeTree));

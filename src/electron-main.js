@@ -67,66 +67,107 @@ app.on("activate", function() {
 });
 
 // In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
-const randomID = () => {
-  let len = 5;
-  let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  let i;
-  let seq = "";
-
-  const randomInt = (low, high) => {
-    return Math.floor(Math.random() * (high - low + 1)) + low;
-  };
-
-  const randomChar = str => {
-    return str.charAt(randomInt(0, str.length - 1));
-  };
-  for (i = 1; i <= len; i++) {
-    seq += randomChar(letters);
+// code. You can also put them in separate files and require them here
+Array.prototype.unique = function() {
+  var a = this.concat();
+  for (var i = 0; i < a.length; ++i) {
+    for (var j = i + 1; j < a.length; ++j) {
+      if (a[i] === a[j]) a.splice(j--, 1);
+    }
   }
-  return seq;
+
+  return a;
+};
+
+const listFiles = src => {
+  const folderArr = glob.sync(`${src}/**/`);
+  const fileArr = glob.sync(`${src}/**/*.pdf`);
+  return folderArr.concat(fileArr).unique();
+};
+
+const addToNode = (currentNode, label, toAdd) => {
+  if (currentNode instanceof Array) {
+    for (var i = 0; i < currentNode.length; i++) {
+      addToNode(currentNode[i], label, toAdd);
+    }
+  } else {
+    for (var prop in currentNode) {
+      if (prop == "label") {
+        if (currentNode[prop] == label) {
+          currentNode.childNodes.push(toAdd);
+        }
+      }
+      if (
+        currentNode[prop] instanceof Object ||
+        currentNode[prop] instanceof Array
+      )
+        addToNode(currentNode[prop], label, toAdd);
+    }
+  }
+};
+
+const createRootDir = (path, array) => {
+  const label = path.split(Path.sep).slice(-2)[0];
+  const obj = {
+    hasCaret: true,
+    iconName: "folder-close",
+    label: label,
+    childNodes: []
+  };
+  array.push(obj);
+};
+
+const createChildDir = (path, basepath, array) => {
+  const label = path.split(Path.sep).slice(-2)[0];
+  const parent = path.split(Path.sep).slice(-3)[0];
+  const obj = {
+    hasCaret: true,
+    iconName: "folder-close",
+    label: label,
+    childNodes: []
+  };
+  addToNode(array, parent, obj);
+};
+
+const createFile = (path, array) => {
+  let label;
+  if (os === "win32") {
+    label = Path.basename(path).toString();
+  } else {
+    label = Path.posix.basename(path).toString();
+  }
+  const parent = path.split(Path.sep).slice(-2)[0];
+  const obj = {
+    iconName: "document",
+    label: label
+  };
+
+  addToNode(array, parent, obj);
 };
 
 const createDataArray = data => {
   let arr = [];
-  let file;
-  data.map(i => {
+  const basePath = data[0];
+  data.forEach((i, idx) => {
+    let isDir;
     if (os === "win32") {
       i = i.replace(/\//g, "\\");
-      file = Path.basename(i);
+      isDir = /\\$/.test(i);
     } else {
-      file = Path.posix.basename(i);
+      isDir = /\/$/.test(i);
     }
-    const folder = Path.dirname(i);
-    const split = folder.split(Path.sep);
-    const folderTitle = split.slice(-1)[0];
-    const folderObject = {
-      folderPath: folder,
-      folderTitle: folderTitle,
-      files: []
-    };
-    const fileObj = {
-      ID: randomID(),
-      fileTitle: file,
-      path: i,
-      hidden: false
-    };
-    const idxFolder = arr.map(o => o.folderPath).indexOf(folder);
-    switch (idxFolder) {
-      case -1:
-        arr.push(folderObject);
-        arr[arr.length - 1].files.push(fileObj);
-        break;
-      default:
-        arr[idxFolder].files.push(fileObj);
-        break;
+    if (isDir) {
+      if (idx === 0) {
+        createRootDir(i, arr);
+      } else {
+        createChildDir(i, basePath, arr);
+      }
+    } else {
+      createFile(i, arr);
     }
   });
-  return arr;
-};
 
-const listFiles = (src, cb) => {
-  glob(src + "/**/*.pdf", cb);
+  return arr;
 };
 
 const openDirectory = () => {
@@ -135,14 +176,11 @@ const openDirectory = () => {
       properties: ["openDirectory"]
     },
     dir => {
-      listFiles(dir, (err, res) => {
-        if (err) {
-          dialog.showErrorBox(`An error occured.`, `${err}`);
-        } else {
-          data = createDataArray(res);
-          mainWindow.webContents.send("directory-data", data);
-        }
-      });
+      {
+        const files = listFiles(dir);
+        const data = createDataArray(files);
+        mainWindow.webContents.send("directory-data", data);
+      }
     }
   );
 };
