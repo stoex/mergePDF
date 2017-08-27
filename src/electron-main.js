@@ -141,7 +141,7 @@ const createFile = (path, array) => {
     iconName: "document",
     label: label,
     path: path,
-    isOpen: false,
+    isOpen: true,
     choice: "whole",
     pages: ""
   };

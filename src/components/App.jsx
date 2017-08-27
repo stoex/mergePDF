@@ -98,6 +98,14 @@ class App extends Component {
     });
   };
 
+  collapseOptions = item => {
+    console.log(item);
+  };
+
+  handleChoice = item => {
+    console.log(item);
+  };
+
   render() {
     if (this.state.nodes.length !== 0) {
       let i = 0;
@@ -130,6 +138,8 @@ class App extends Component {
           collapseAll={this.collapseAll}
           expandAll={this.expandAll}
           onSortEnd={this.onSortEnd}
+          handleChoice={this.handleChoice}
+          collapseOptions={this.collapseOptions}
         />
       </div>
     );

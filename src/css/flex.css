@@ -60,3 +60,11 @@ body {
   margin-top: 10px;
   margin-bottom: 10px;
 }
+
+.listicons {
+  text-align: right;
+}
+
+.mergelist {
+  margin-bottom: 10px;
+}

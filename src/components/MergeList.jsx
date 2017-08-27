@@ -1,31 +1,87 @@
 import React, { Component } from "react";
-import { render } from "react-dom";
-import { SortableContainer, SortableElement } from "react-sortable-hoc";
+import {
+  SortableContainer,
+  SortableElement,
+  SortableHandle
+} from "react-sortable-hoc";
+import {
+  Button,
+  AnchorButton,
+  Collapse,
+  Radio,
+  RadioGroup
+} from "@blueprintjs/core";
 
-const SortableItem = SortableElement(({ value }) =>
-  <li>
-    {value}
-  </li>
+const DragHandle = SortableHandle(() =>
+  <span className={"pt-icon-standard pt-icon-drag-handle-horizontal"} />
 );
 
-const SortableList = SortableContainer(({ items }) => {
+const SortableItem = SortableElement(({ value, hc, co, isOpen, choice }) => {
   return (
-    <ul>
+    <div className={"pt-elevation-0 mergelist"}>
+      <section>
+        <div className={"column"}>
+          <DragHandle />
+        </div>
+        <div className={"column"}>
+          {value}
+        </div>
+        <div className={"column listicons"}>
+          <Button iconName="document-open" className={"pt-minimal"} />
+          <Button iconName="trash" className={"pt-minimal"} />
+          <AnchorButton
+            iconName={isOpen ? "caret-down" : "caret-up"}
+            className={"pt-minimal"}
+            onClick={co}
+          />
+        </div>
+      </section>
+      <section>
+        <div className={"column"}>
+          <Collapse isOpen={isOpen}>
+            <RadioGroup selectedValue={choice} onChange={hc}>
+              <Radio label="Whole" value="whole" />
+              <Radio label="Single page" value="single" />
+              <Radio label="Page range" value="range" />
+            </RadioGroup>
+          </Collapse>
+        </div>
+      </section>
+    </div>
+  );
+});
+
+const SortableList = SortableContainer(({ items, hc, co }) => {
+  return (
+    <div>
       {items.map((obj, index) =>
-        <SortableItem key={`item-${index}`} index={index} value={obj.label} />
+        <SortableItem
+          key={`item-${index}`}
+          index={index}
+          value={obj.label}
+          isOpen={obj.isOpen}
+          choice={obj.choice}
+          handleChoice={hc}
+          collapeOptions={co}
+        />
       )}
-    </ul>
+    </div>
   );
 });
 
 class MergeList extends Component {
-  state = {
-    items: ["Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6"]
-  };
   render() {
     return (
-      <SortableList items={this.props.merge} onSortEnd={this.props.onSortEnd} />
+      <SortableList
+        items={this.props.merge}
+        onSortEnd={this.props.onSortEnd}
+        useDragHandle={true}
+        lockAxis={"y"}
+        hc={this.props.handleChoice}
+        co={this.props.collapseOptions}
+      />
     );
   }
 }
+
 export default MergeList;

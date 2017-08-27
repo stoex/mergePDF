@@ -26,6 +26,8 @@ class ContentArea extends Component {
             <MergeList
               merge={this.props.merge}
               onSortEnd={this.props.onSortEnd}
+              collapseOptions={this.props.collapseOptions}
+              handleChoice={this.props.handleChoice}
             />
           </div>
         </section>
