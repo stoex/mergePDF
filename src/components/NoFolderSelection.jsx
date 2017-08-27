@@ -10,6 +10,7 @@ class NoFolderSelection extends Component {
         visual="folder-close"
         title="No folder selected."
         description={description}
+        className={"foldertree"}
       />
     );
   }

@@ -139,7 +139,11 @@ const createFile = (path, array) => {
   const parent = path.split(Path.sep).slice(-2)[0];
   const obj = {
     iconName: "document",
-    label: label
+    label: label,
+    path: path,
+    isOpen: false,
+    choice: "whole",
+    pages: ""
   };
 
   addToNode(array, parent, obj);
