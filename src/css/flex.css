@@ -68,3 +68,9 @@ body {
 .mergelist {
   margin-bottom: 10px;
 }
+
+.mergelist-item {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}

@@ -18,12 +18,12 @@ const DragHandle = SortableHandle(() =>
 
 const SortableItem = SortableElement(({ value, hc, co, isOpen, choice }) => {
   return (
-    <div className={"pt-elevation-0 mergelist"}>
-      <section>
-        <div className={"column"}>
+    <div>
+      <section className={"pt-elevation-0 mergelist"}>
+        <div className={"column mergelist-item"}>
           <DragHandle />
         </div>
-        <div className={"column"}>
+        <div className={"column mergelist-item"}>
           {value}
         </div>
         <div className={"column listicons"}>
@@ -36,17 +36,17 @@ const SortableItem = SortableElement(({ value, hc, co, isOpen, choice }) => {
           />
         </div>
       </section>
-      <section>
-        <div className={"column"}>
-          <Collapse isOpen={isOpen}>
+      <Collapse isOpen={isOpen}>
+        <section className={"pt-elevation-0 mergelist"}>
+          <div className={"column"}>
             <RadioGroup selectedValue={choice} onChange={hc}>
               <Radio label="Whole" value="whole" />
               <Radio label="Single page" value="single" />
               <Radio label="Page range" value="range" />
             </RadioGroup>
-          </Collapse>
-        </div>
-      </section>
+          </div>
+        </section>
+      </Collapse>
     </div>
   );
 });
