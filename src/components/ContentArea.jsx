@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import FolderTree from "./FolderTree";
-import FileCard from "./FileCard";
 import MergeList from "./MergeList";
 import "../css/flex.css";
 

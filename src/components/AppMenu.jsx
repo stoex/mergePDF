@@ -7,7 +7,7 @@ class AppMenu extends Component {
   };
 
   handleKeyPress = e => {
-    e.key === "Enter" ? console.log("enter pressed") : null;
+    return e.key === "Enter" ? console.log("enter pressed") : null;
   };
 
   render() {

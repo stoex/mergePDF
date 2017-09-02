@@ -64,14 +64,18 @@ class App extends Component {
 
   expandAll = () => {
     this.forEachNode(this.state.nodes, n => {
-      n.hasOwnProperty("hasCaret") ? (n.isExpanded = true) : null;
+      if (n.hasOwnProperty("hasCaret")) {
+        n.isExpanded = true;
+      }
       this.setState(this.state);
     });
   };
 
   collapseAll = () => {
     this.forEachNode(this.state.nodes, n => {
-      n.hasOwnProperty("hasCaret") ? (n.isExpanded = false) : null;
+      if (n.hasOwnProperty("hasCaret")) {
+        n.isExpanded = false;
+      }
       this.setState(this.state);
     });
   };
@@ -83,7 +87,7 @@ class App extends Component {
     if (e.target.value !== "") {
       this.forEachNode(this.state.nodes, n => {
         if (n.iconName === "document") {
-          n.label.toUpperCase().includes(e.target.value.toUpperCase())
+          return n.label.toUpperCase().includes(e.target.value.toUpperCase())
             ? (n.isSelected = true)
             : null;
         }

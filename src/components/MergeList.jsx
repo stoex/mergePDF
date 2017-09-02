@@ -4,13 +4,7 @@ import {
   SortableElement,
   SortableHandle
 } from "react-sortable-hoc";
-import {
-  Button,
-  AnchorButton,
-  Collapse,
-  Radio,
-  RadioGroup
-} from "@blueprintjs/core";
+import { Button } from "@blueprintjs/core";
 
 const DragHandle = SortableHandle(() =>
   <span className={"pt-icon-standard pt-icon-drag-handle-horizontal"} />
@@ -29,24 +23,8 @@ const SortableItem = SortableElement(({ value, hc, co, isOpen, choice }) => {
         <div className={"column listicons"}>
           <Button iconName="document-open" className={"pt-minimal"} />
           <Button iconName="trash" className={"pt-minimal"} />
-          <AnchorButton
-            iconName={isOpen ? "caret-down" : "caret-up"}
-            className={"pt-minimal"}
-            onClick={co}
-          />
         </div>
       </section>
-      <Collapse isOpen={isOpen}>
-        <section className={"pt-elevation-0 mergelist"}>
-          <div className={"column"}>
-            <RadioGroup selectedValue={choice} onChange={hc}>
-              <Radio label="Whole" value="whole" />
-              <Radio label="Single page" value="single" />
-              <Radio label="Page range" value="range" />
-            </RadioGroup>
-          </div>
-        </section>
-      </Collapse>
     </div>
   );
 });
@@ -55,15 +33,7 @@ const SortableList = SortableContainer(({ items, hc, co }) => {
   return (
     <div>
       {items.map((obj, index) =>
-        <SortableItem
-          key={`item-${index}`}
-          index={index}
-          value={obj.label}
-          isOpen={obj.isOpen}
-          choice={obj.choice}
-          handleChoice={hc}
-          collapeOptions={co}
-        />
+        <SortableItem key={`item-${index}`} index={index} value={obj.label} />
       )}
     </div>
   );
