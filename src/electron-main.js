@@ -7,12 +7,13 @@ const glob = require("glob");
 const Path = require("path");
 const fs = require("fs");
 const os = require("os").platform();
-const pdf = require("pdfjs-dist");
+const PDFJS = require("pdfjs-dist");
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const url = require("url");
-const { dialog, ipcMain } = electron;
-var mainWindow;
+const { dialog, ipcMain, shell } = electron;
+
+let mainWindow;
 
 function createWindow() {
   // Create the browser window.
@@ -129,7 +130,7 @@ const createChildDir = (path, basepath, array) => {
   addToNode(array, parent, obj);
 };
 
-const createFile = (path, array) => {
+const createFile = (path, pages, array) => {
   let label;
   if (os === "win32") {
     label = Path.basename(path).toString();
@@ -141,12 +142,12 @@ const createFile = (path, array) => {
     iconName: "document",
     label: label,
     path: path,
+    pages: pages,
     isOpen: true,
-    choice: "whole",
-    pages: ""
+    choice: "whole"
   };
-
   addToNode(array, parent, obj);
+  Promise.resolve();
 };
 
 const createDataArray = data => {
@@ -167,7 +168,13 @@ const createDataArray = data => {
         createChildDir(i, basePath, arr);
       }
     } else {
-      createFile(i, arr);
+      //createFile(i, arr);
+      fs.readFile(i, (err, data) => {
+        const rawPDF = new Uint8Array(data);
+        PDFJS.getDocument({ data: rawPDF }).then(doc => {
+          createFile(i, doc.numPages, arr);
+        });
+      });
     }
   });
 
@@ -189,6 +196,14 @@ const openDirectory = () => {
   );
 };
 
+const openFile = a => {
+  shell.openItem(a);
+};
+
 ipcMain.on("open-dialog", (e, a) => {
   openDirectory();
+});
+
+ipcMain.on("open-file", (e, a) => {
+  openFile(a);
 });

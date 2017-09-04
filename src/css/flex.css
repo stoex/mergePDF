@@ -48,7 +48,7 @@ body {
 }
 
 .column {
-  padding: 10px 0;
+  padding: 1em 0;
 }
 
 .navbar {
@@ -57,16 +57,24 @@ body {
 }
 
 .treebuttons {
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 1em;
+  margin-bottom: 1em;
 }
 
-.listicons {
-  text-align: right;
+.drag-handle {
+  display: inline-block;
+  margin-left: 2em;
+  margin-right: 1em;
+  width: 16px;
+  cursor: pointer;
+}
+
+.button-group {
+  margin-left: 4em;
 }
 
 .mergelist {
-  margin-bottom: 10px;
+  margin-bottom: 1em;
 }
 
 .mergelist-item {

@@ -46,8 +46,9 @@ class App extends Component {
   };
 
   handleNodeClick = (nodeData, _nodePath, e) => {
-    if (nodeData.hasOwnProperty("pages")) {
-      this.state.merge.push(nodeData);
+    if (nodeData.hasOwnProperty("choice")) {
+      const data = Object.assign({}, nodeData);
+      this.state.merge.push(data);
       this.setState(this.state);
     }
   };
@@ -102,12 +103,14 @@ class App extends Component {
     });
   };
 
-  collapseOptions = item => {
-    console.log(item);
+  openFile = path => {
+    ipcRenderer.send("open-file", path);
   };
 
-  handleChoice = item => {
-    console.log(item);
+  removeFromMergeList = index => {
+    let state = [].concat(this.state.merge);
+    state.splice(index, 1);
+    this.setState({ merge: state });
   };
 
   render() {
@@ -144,6 +147,8 @@ class App extends Component {
           onSortEnd={this.onSortEnd}
           handleChoice={this.handleChoice}
           collapseOptions={this.collapseOptions}
+          openFile={this.openFile}
+          removeFromMergeList={this.removeFromMergeList}
         />
       </div>
     );

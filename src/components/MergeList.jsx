@@ -4,40 +4,75 @@ import {
   SortableElement,
   SortableHandle
 } from "react-sortable-hoc";
-import { Button } from "@blueprintjs/core";
 
-const DragHandle = SortableHandle(() =>
-  <span className={"pt-icon-standard pt-icon-drag-handle-horizontal"} />
+const DragHandle = SortableHandle(() => (
+  <span
+    className={"pt-icon-standard pt-icon-drag-handle-horizontal drag-handle"}
+  />
+));
+
+const SortableItem = SortableElement(
+  ({ obj, openFile, removeFromMergeList, sortIndex }) => {
+    return (
+      <div>
+        <section className={"pt-elevation-0 mergelist"}>
+          <div className={"column mergelist-item"}>
+            <DragHandle />
+          </div>
+          <div className={"column mergelist-item"}>{obj.label}</div>
+          <div className={"column pt-button-group pt-minimal button-group"}>
+            <a
+              onClick={i => {
+                openFile(obj.path);
+              }}
+              className={"pt-button pt-icon-document-open"}
+              tabIndex={"0"}
+              role={"button"}
+            >
+              Preview
+            </a>
+            <a
+              className={"pt-button pt-icon-wrench"}
+              tabIndex={"0"}
+              role={"button"}
+            >
+              Options
+            </a>
+            <a
+              onClick={i => {
+                removeFromMergeList(sortIndex);
+              }}
+              className={"pt-button pt-icon-small-cross"}
+              tabIndex={"0"}
+              role={"button"}
+            >
+              Remove
+            </a>
+          </div>
+        </section>
+      </div>
+    );
+  }
 );
 
-const SortableItem = SortableElement(({ value, hc, co, isOpen, choice }) => {
-  return (
-    <div>
-      <section className={"pt-elevation-0 mergelist"}>
-        <div className={"column mergelist-item"}>
-          <DragHandle />
-        </div>
-        <div className={"column mergelist-item"}>
-          {value}
-        </div>
-        <div className={"column listicons"}>
-          <Button iconName="document-open" className={"pt-minimal"} />
-          <Button iconName="trash" className={"pt-minimal"} />
-        </div>
-      </section>
-    </div>
-  );
-});
-
-const SortableList = SortableContainer(({ items, hc, co }) => {
-  return (
-    <div>
-      {items.map((obj, index) =>
-        <SortableItem key={`item-${index}`} index={index} value={obj.label} />
-      )}
-    </div>
-  );
-});
+const SortableList = SortableContainer(
+  ({ items, openFile, removeFromMergeList }) => {
+    return (
+      <div>
+        {items.map((obj, index) => (
+          <SortableItem
+            key={`item-${index}`}
+            index={index}
+            sortIndex={index}
+            obj={obj}
+            openFile={openFile}
+            removeFromMergeList={removeFromMergeList}
+          />
+        ))}
+      </div>
+    );
+  }
+);
 
 class MergeList extends Component {
   render() {
@@ -47,8 +82,8 @@ class MergeList extends Component {
         onSortEnd={this.props.onSortEnd}
         useDragHandle={true}
         lockAxis={"y"}
-        hc={this.props.handleChoice}
-        co={this.props.collapseOptions}
+        openFile={this.props.openFile}
+        removeFromMergeList={this.props.removeFromMergeList}
       />
     );
   }
