@@ -10,19 +10,14 @@ const listFiles = src => {
 const countPages = arr => {
   let countPromises = [];
   arr.forEach(i => {
-    fs.readFile(i, (err, data) => {
-      const rawData = new Uint8Array(data);
-      countPromises.push(
-        pdfjsLib.getDocument(rawData).then(doc => {
-          return doc.numPages;
-        })
-      );
-    });
+    const data = new Uint8Array(fs.readFileSync(i));
+    const promise = pdfjsLib.getDocument(data);
+    countPromises.push(promise);
   });
 
   return Promise.all(countPromises).then(pages => {
     pages.forEach(p => {
-      console.log(p);
+      console.log(p.pdfInfo);
     });
   });
 };
