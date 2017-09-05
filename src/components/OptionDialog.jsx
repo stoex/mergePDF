@@ -5,12 +5,13 @@ import {
   Slider,
   RangeSlider,
   Radio,
+  RadioGroup,
   Label,
   Intent
 } from "@blueprintjs/core";
 
 class OptionDialog extends Component {
-  state = { isOpen: true, value: 1, range: [1, 32] };
+  state = { isOpen: true, value: 1, range: [1, 32], option: "whole" };
 
   toggleDialog = () => {
     this.setState({ isOpen: !this.state.isOpen });
@@ -24,6 +25,10 @@ class OptionDialog extends Component {
     this.setState({ range: range });
   };
 
+  handleOptionChange = e => {
+    this.setState({ option: e.currentTarget.value });
+  };
+
   render() {
     return (
       <div>
@@ -35,13 +40,24 @@ class OptionDialog extends Component {
           title={`${this.props.label} - Options`}
         >
           <div className="pt-dialog-body">
+            <RadioGroup
+              label="Please select one of the following options:"
+              onChange={this.handleOptionChange}
+              selectedValue={this.state.option}
+            >
+              <Radio label="Whole document" value="whole" />
+              <Radio label="Single page" value="single" />
+              <Radio label="Page range" value="range" />
+            </RadioGroup>
             <Slider
               min={1}
               max={32}
               stepSize={1}
               labelStepSize={10}
+              showTrackFill={false}
               onChange={this.getChangeHandler}
               value={this.state.value}
+              disabled={this.state.option !== "single" ? true : false}
             />
             <RangeSlider
               min={1}
@@ -50,6 +66,7 @@ class OptionDialog extends Component {
               labelStepSize={10}
               onChange={this.handleRangeChange}
               value={this.state.range}
+              disabled={this.state.option !== "range" ? true : false}
             />
           </div>
           <div className="pt-dialog-footer">
