@@ -26,6 +26,8 @@ class App extends Component {
       state.forEach(o => {
         if (a.path === o.path) {
           o.pages = a.pages;
+          o.range = "";
+          o.id = this.randomID();
         }
       });
       this.setState({ merge: state });
@@ -35,6 +37,25 @@ class App extends Component {
   componentWillUnmount = () => {
     ipcRenderer.removeListener("directory-data");
     ipcRenderer.removeListener("post-pdf-info");
+  };
+
+  randomID = () => {
+    const len = 5;
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let i;
+    let seq = "";
+
+    const randomInt = (low, high) => {
+      return Math.floor(Math.random() * (high - low + 1)) + low;
+    };
+
+    const randomChar = str => {
+      return str.charAt(randomInt(0, str.length - 1));
+    };
+    for (i = 1; i <= len; i++) {
+      seq += randomChar(letters);
+    }
+    return seq;
   };
 
   receiveState = data => {

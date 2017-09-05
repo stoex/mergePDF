@@ -84,6 +84,7 @@ class MergeList extends Component {
         lockAxis={"y"}
         openFile={this.props.openFile}
         removeFromMergeList={this.props.removeFromMergeList}
+        helperClass="SortableHelper"
       />
     );
   }

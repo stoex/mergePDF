@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import FolderTree from "./FolderTree";
 import MergeList from "./MergeList";
+import OptionDialog from "./OptionDialog";
 import "../css/flex.css";
 
 class ContentArea extends Component {
@@ -27,7 +28,9 @@ class ContentArea extends Component {
               onSortEnd={this.props.onSortEnd}
               openFile={this.props.openFile}
               removeFromMergeList={this.props.removeFromMergeList}
+              className="SortableList"
             />
+            <OptionDialog />
           </div>
         </section>
       </div>

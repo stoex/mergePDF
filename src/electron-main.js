@@ -194,7 +194,6 @@ const getPdfInfo = (obj, callback) => {
   const pdf = PDFJS.getDocument(raw);
   return pdf.then(doc => {
     copy.pages = doc.pdfInfo.numPages;
-    console.log(copy);
     callback(copy);
   });
 };

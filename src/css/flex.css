@@ -82,3 +82,14 @@ body {
   justify-content: center;
   flex-direction: column;
 }
+
+.SortableHelper {
+  box-shadow: 0 5px 5px -5px rgba(0, 0, 0, 0.2),
+    0 -5px 5px -5px rgba(0, 0, 0, 0.2);
+  background-color: rgba(255, 255, 255, 0.8);
+  cursor: row-resize;
+}
+
+.SortableList {
+  z-index: 0;
+}
