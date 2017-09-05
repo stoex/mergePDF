@@ -20,12 +20,21 @@ class App extends Component {
     ipcRenderer.on("directory-data", (e, a) => {
       this.receiveState(a[0]);
     });
+
+    ipcRenderer.on("post-pdf-info", (e, a) => {
+      let state = [].concat(this.state.merge);
+      state.forEach(o => {
+        if (a.path === o.path) {
+          o.pages = a.pages;
+        }
+      });
+      this.setState({ merge: state });
+    });
   };
 
   componentWillUnmount = () => {
-    ipcRenderer.removeListener("directory-data", (e, a) => {
-      this.receiveState(a[0]);
-    });
+    ipcRenderer.removeListener("directory-data");
+    ipcRenderer.removeListener("post-pdf-info");
   };
 
   receiveState = data => {
@@ -48,6 +57,7 @@ class App extends Component {
   handleNodeClick = (nodeData, _nodePath, e) => {
     if (nodeData.hasOwnProperty("choice")) {
       const data = Object.assign({}, nodeData);
+      ipcRenderer.send("get-pdf-info", data);
       this.state.merge.push(data);
       this.setState(this.state);
     }

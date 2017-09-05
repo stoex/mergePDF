@@ -130,7 +130,7 @@ const createChildDir = (path, basepath, array) => {
   addToNode(array, parent, obj);
 };
 
-const createFile = (path, pages, array) => {
+const createFile = (path, array) => {
   let label;
   if (os === "win32") {
     label = Path.basename(path).toString();
@@ -142,12 +142,10 @@ const createFile = (path, pages, array) => {
     iconName: "document",
     label: label,
     path: path,
-    pages: pages,
     isOpen: true,
     choice: "whole"
   };
   addToNode(array, parent, obj);
-  Promise.resolve();
 };
 
 const createDataArray = data => {
@@ -168,13 +166,7 @@ const createDataArray = data => {
         createChildDir(i, basePath, arr);
       }
     } else {
-      //createFile(i, arr);
-      fs.readFile(i, (err, data) => {
-        const rawPDF = new Uint8Array(data);
-        PDFJS.getDocument({ data: rawPDF }).then(doc => {
-          createFile(i, doc.numPages, arr);
-        });
-      });
+      createFile(i, arr);
     }
   });
 
@@ -196,6 +188,17 @@ const openDirectory = () => {
   );
 };
 
+const getPdfInfo = (obj, callback) => {
+  const copy = Object.assign({}, obj);
+  const raw = new Uint8Array(fs.readFileSync(copy.path));
+  const pdf = PDFJS.getDocument(raw);
+  return pdf.then(doc => {
+    copy.pages = doc.pdfInfo.numPages;
+    console.log(copy);
+    callback(copy);
+  });
+};
+
 const openFile = a => {
   shell.openItem(a);
 };
@@ -206,4 +209,10 @@ ipcMain.on("open-dialog", (e, a) => {
 
 ipcMain.on("open-file", (e, a) => {
   openFile(a);
+});
+
+ipcMain.on("get-pdf-info", (e, a) => {
+  getPdfInfo(a, data => {
+    e.sender.send("post-pdf-info", data);
+  });
 });
