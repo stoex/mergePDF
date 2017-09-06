@@ -12,7 +12,7 @@ class AppMenu extends Component {
 
   render() {
     return (
-      <nav className={"pt-navbar pt-dark"}>
+      <nav className={"pt-navbar pt-dark pt-fixed-top"}>
         <div className={"navbar"}>
           <div className={"pt-navbar-group pt-align-left"}>
             <button
