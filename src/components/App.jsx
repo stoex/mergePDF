@@ -252,7 +252,7 @@ class App extends Component {
           pageRangeSelectionHandler={this.pageRangeSelectionHandler}
           optionSelectionHandler={this.optionSelectionHandler}
         />
-        <Toaster position={Position.BOTTOM} ref={this.refHandlers.toaster} />
+        <Toaster position={Position.TOP_RIGHT} ref={this.refHandlers.toaster} />
       </div>
     );
   }
