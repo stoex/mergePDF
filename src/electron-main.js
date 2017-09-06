@@ -142,8 +142,7 @@ const createFile = (path, array) => {
     iconName: "document",
     label: label,
     path: path,
-    isOpen: true,
-    choice: "whole"
+    option: "whole"
   };
   addToNode(array, parent, obj);
 };
@@ -180,9 +179,11 @@ const openDirectory = () => {
     },
     dir => {
       {
-        const files = listFiles(dir);
-        const data = createDataArray(files);
-        mainWindow.webContents.send("directory-data", data);
+        if (dir !== undefined) {
+          const files = listFiles(dir);
+          const data = createDataArray(files);
+          mainWindow.webContents.send("directory-data", data);
+        }
       }
     }
   );

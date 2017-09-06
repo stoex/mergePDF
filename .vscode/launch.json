@@ -9,11 +9,10 @@
       "request": "launch",
       "name": "Electron Main",
       "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
-      "runtimeArgs": [".", "--enable-logging"],
       "program": "${workspaceRoot}/src/electron-main.js",
       "protocol": "inspector",
-      "externalConsole": false,
-      "env": "ELECTRON_START_URL=\"http://localhost:3000\""
+      "console": "internalConsole",
+      "env": { "ELECTRON_START_URL": "http://localhost:3000" }
     },
     {
       "type": "node",

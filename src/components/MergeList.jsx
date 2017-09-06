@@ -12,7 +12,7 @@ const DragHandle = SortableHandle(() => (
 ));
 
 const SortableItem = SortableElement(
-  ({ obj, openFile, removeFromMergeList, sortIndex }) => {
+  ({ obj, openFile, removeFromMergeList, sortIndex, toggleDialog }) => {
     return (
       <div>
         <section className={"pt-elevation-0 mergelist"}>
@@ -32,6 +32,9 @@ const SortableItem = SortableElement(
               Preview
             </a>
             <a
+              onClick={i => {
+                toggleDialog(obj.id);
+              }}
               className={"pt-button pt-icon-wrench"}
               tabIndex={"0"}
               role={"button"}
@@ -56,7 +59,7 @@ const SortableItem = SortableElement(
 );
 
 const SortableList = SortableContainer(
-  ({ items, openFile, removeFromMergeList }) => {
+  ({ items, openFile, removeFromMergeList, toggleDialog }) => {
     return (
       <div>
         {items.map((obj, index) => (
@@ -67,6 +70,7 @@ const SortableList = SortableContainer(
             obj={obj}
             openFile={openFile}
             removeFromMergeList={removeFromMergeList}
+            toggleDialog={toggleDialog}
           />
         ))}
       </div>
@@ -84,6 +88,7 @@ class MergeList extends Component {
         lockAxis={"y"}
         openFile={this.props.openFile}
         removeFromMergeList={this.props.removeFromMergeList}
+        toggleDialog={this.props.toggleDialog}
         helperClass="SortableHelper"
       />
     );

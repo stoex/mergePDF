@@ -28,9 +28,29 @@ class ContentArea extends Component {
               onSortEnd={this.props.onSortEnd}
               openFile={this.props.openFile}
               removeFromMergeList={this.props.removeFromMergeList}
+              toggleDialog={this.props.toggleDialog}
               className="SortableList"
             />
-            <OptionDialog />
+            {this.props.merge.map(o => {
+              return (
+                <OptionDialog
+                  key={o.id}
+                  id={o.id}
+                  isOpen={o.isOpen}
+                  toggleDialog={this.props.toggleDialog}
+                  label={o.label}
+                  pageSelectionHandler={this.props.pageSelectionHandler}
+                  pageRangeSelectionHandler={
+                    this.props.pageRangeSelectionHandler
+                  }
+                  optionSelectionHandler={this.props.optionSelectionHandler}
+                  option={o.option}
+                  value={o.value}
+                  range={o.range}
+                  pages={o.pages}
+                />
+              );
+            })}
           </div>
         </section>
       </div>

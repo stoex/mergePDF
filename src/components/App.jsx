@@ -26,8 +26,11 @@ class App extends Component {
       state.forEach(o => {
         if (a.path === o.path) {
           o.pages = a.pages;
-          o.range = "";
+          o.range = [1, a.pages];
           o.id = this.randomID();
+          o.choice = "whole";
+          o.value = 1;
+          o.isOpen = false;
         }
       });
       this.setState({ merge: state });
@@ -76,7 +79,7 @@ class App extends Component {
   };
 
   handleNodeClick = (nodeData, _nodePath, e) => {
-    if (nodeData.hasOwnProperty("choice")) {
+    if (nodeData.hasOwnProperty("option")) {
       const data = Object.assign({}, nodeData);
       ipcRenderer.send("get-pdf-info", data);
       this.state.merge.push(data);
@@ -144,6 +147,38 @@ class App extends Component {
     this.setState({ merge: state });
   };
 
+  toggleDialog = id => {
+    const state = [].concat(this.state.merge);
+    state.map(i => {
+      return i.id === id ? (i.isOpen = !i.isOpen) : i;
+    });
+    this.setState({ merge: state });
+  };
+
+  pageSelectionHandler = (number, id) => {
+    const state = [].concat(this.state.merge);
+    state.map(i => {
+      return i.id === id ? (i.value = number) : i;
+    });
+    this.setState({ merge: state });
+  };
+
+  pageRangeSelectionHandler = (range, id) => {
+    const state = [].concat(this.state.merge);
+    state.map(i => {
+      return i.id === id ? (i.range = range) : i;
+    });
+    this.setState({ merge: state });
+  };
+
+  optionSelectionHandler = (e, id) => {
+    const state = [].concat(this.state.merge);
+    state.map(i => {
+      return i.id === id ? (i.option = e.currentTarget.value) : i;
+    });
+    this.setState({ merge: state });
+  };
+
   render() {
     if (this.state.nodes.length !== 0) {
       let i = 0;
@@ -180,6 +215,10 @@ class App extends Component {
           collapseOptions={this.collapseOptions}
           openFile={this.openFile}
           removeFromMergeList={this.removeFromMergeList}
+          toggleDialog={this.toggleDialog}
+          pageSelectionHandler={this.pageSelectionHandler}
+          pageRangeSelectionHandler={this.pageRangeSelectionHandler}
+          optionSelectionHandler={this.optionSelectionHandler}
         />
       </div>
     );
