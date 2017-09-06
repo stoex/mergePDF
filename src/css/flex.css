@@ -73,10 +73,6 @@ body {
   margin-left: 4em;
 }
 
-.mergelist {
-  margin-bottom: 1em;
-}
-
 .mergelist-item {
   display: flex;
   justify-content: center;

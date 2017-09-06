@@ -32,24 +32,26 @@ class ContentArea extends Component {
               className="SortableList"
             />
             {this.props.merge.map(o => {
-              return (
-                <OptionDialog
-                  key={o.id}
-                  id={o.id}
-                  isOpen={o.isOpen}
-                  toggleDialog={this.props.toggleDialog}
-                  label={o.label}
-                  pageSelectionHandler={this.props.pageSelectionHandler}
-                  pageRangeSelectionHandler={
-                    this.props.pageRangeSelectionHandler
-                  }
-                  optionSelectionHandler={this.props.optionSelectionHandler}
-                  option={o.option}
-                  value={o.value}
-                  range={o.range}
-                  pages={o.pages}
-                />
-              );
+              if (o.pages > 1) {
+                return (
+                  <OptionDialog
+                    key={o.id}
+                    id={o.id}
+                    isOpen={o.isOpen}
+                    toggleDialog={this.props.toggleDialog}
+                    label={o.label}
+                    pageSelectionHandler={this.props.pageSelectionHandler}
+                    pageRangeSelectionHandler={
+                      this.props.pageRangeSelectionHandler
+                    }
+                    optionSelectionHandler={this.props.optionSelectionHandler}
+                    option={o.option}
+                    value={o.value}
+                    range={o.range}
+                    pages={o.pages}
+                  />
+                );
+              }
             })}
           </div>
         </section>

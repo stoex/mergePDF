@@ -15,7 +15,7 @@ const SortableItem = SortableElement(
   ({ obj, openFile, removeFromMergeList, sortIndex, toggleDialog }) => {
     return (
       <div>
-        <section className={"pt-elevation-0 mergelist"}>
+        <section className={"pt-elevation-0"}>
           <div className={"column mergelist-item"}>
             <DragHandle />
           </div>
@@ -35,7 +35,13 @@ const SortableItem = SortableElement(
               onClick={i => {
                 toggleDialog(obj.id);
               }}
-              className={"pt-button pt-icon-wrench"}
+              className={
+                obj.pages <= 1 ? (
+                  "pt-button pt-icon-wrench pt-disabled"
+                ) : (
+                  "pt-button pt-icon-wrench"
+                )
+              }
               tabIndex={"0"}
               role={"button"}
             >
@@ -43,7 +49,7 @@ const SortableItem = SortableElement(
             </a>
             <a
               onClick={i => {
-                removeFromMergeList(sortIndex);
+                removeFromMergeList(obj.id);
               }}
               className={"pt-button pt-icon-small-cross"}
               tabIndex={"0"}

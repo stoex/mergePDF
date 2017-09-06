@@ -4,6 +4,7 @@ import "normalize.css/normalize.css";
 import "@blueprintjs/core/dist/blueprint.css";
 import ContentArea from "./ContentArea.jsx";
 import { arrayMove } from "react-sortable-hoc";
+import { Toaster, Position, Intent } from "@blueprintjs/core";
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
 
@@ -81,6 +82,7 @@ class App extends Component {
   handleNodeClick = (nodeData, _nodePath, e) => {
     if (nodeData.hasOwnProperty("option")) {
       const data = Object.assign({}, nodeData);
+      this.addToast(data);
       ipcRenderer.send("get-pdf-info", data);
       this.state.merge.push(data);
       this.setState(this.state);
@@ -141,8 +143,9 @@ class App extends Component {
     ipcRenderer.send("open-file", path);
   };
 
-  removeFromMergeList = index => {
+  removeFromMergeList = id => {
     let state = [].concat(this.state.merge);
+    const index = state.findIndex(x => x.id === id);
     state.splice(index, 1);
     this.setState({ merge: state });
   };
@@ -179,6 +182,34 @@ class App extends Component {
     this.setState({ merge: state });
   };
 
+  toaster;
+
+  refHandlers = {
+    toaster: ref => (this.toaster = ref)
+  };
+
+  addToast = obj => {
+    const toast = {
+      iconName: "tick",
+      message: `"${obj.label}" added!`,
+      intent: Intent.SUCCESS,
+      timeout: 2000,
+      action: {
+        onClick: () => {
+          this.removeFromMergeList(obj.id);
+          this.toaster.show({
+            iconName: "remove",
+            intent: Intent.PRIMARY,
+            message: `Removed "${obj.label}"`,
+            timeout: 1000
+          });
+        },
+        text: "Undo"
+      }
+    };
+    this.toaster.show(toast);
+  };
+
   render() {
     if (this.state.nodes.length !== 0) {
       let i = 0;
@@ -194,6 +225,7 @@ class App extends Component {
         }
       });
     }
+
     return (
       <div>
         <AppMenu
@@ -220,6 +252,7 @@ class App extends Component {
           pageRangeSelectionHandler={this.pageRangeSelectionHandler}
           optionSelectionHandler={this.optionSelectionHandler}
         />
+        <Toaster position={Position.BOTTOM} ref={this.refHandlers.toaster} />
       </div>
     );
   }
