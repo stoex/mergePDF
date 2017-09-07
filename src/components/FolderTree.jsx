@@ -4,7 +4,11 @@ import NoFolderSelection from "./NoFolderSelection";
 class FolderTree extends Component {
   render() {
     if (this.props.nodes.length === 0) {
-      return <NoFolderSelection />;
+      return (
+        <div className={"list"}>
+          <NoFolderSelection />
+        </div>
+      );
     } else {
       return (
         <div>

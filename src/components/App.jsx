@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import AppMenu from "./AppMenu";
 import "normalize.css/normalize.css";
+import "flexboxgrid/css/flexboxgrid.min.css";
 import "@blueprintjs/core/dist/blueprint.css";
+import "../css/main.css";
 import ContentArea from "./ContentArea.jsx";
 import { arrayMove } from "react-sortable-hoc";
 import { Toaster, Position, Intent } from "@blueprintjs/core";
@@ -16,6 +18,12 @@ class App extends Component {
       merge: []
     };
   }
+
+  toaster;
+
+  refHandlers = {
+    toaster: ref => (this.toaster = ref)
+  };
 
   componentDidMount = () => {
     ipcRenderer.on("directory-data", (e, a) => {
@@ -146,6 +154,12 @@ class App extends Component {
   removeFromMergeList = id => {
     let state = [].concat(this.state.merge);
     const index = state.findIndex(x => x.id === id);
+    this.toaster.show({
+      iconName: "remove",
+      intent: Intent.PRIMARY,
+      message: `Removed "${state[index].label}"`,
+      timeout: 2000
+    });
     state.splice(index, 1);
     this.setState({ merge: state });
   };
@@ -182,12 +196,6 @@ class App extends Component {
     this.setState({ merge: state });
   };
 
-  toaster;
-
-  refHandlers = {
-    toaster: ref => (this.toaster = ref)
-  };
-
   addToast = obj => {
     const toast = {
       iconName: "tick",
@@ -197,12 +205,6 @@ class App extends Component {
       action: {
         onClick: () => {
           this.removeFromMergeList(obj.id);
-          this.toaster.show({
-            iconName: "remove",
-            intent: Intent.PRIMARY,
-            message: `Removed "${obj.label}"`,
-            timeout: 1000
-          });
         },
         text: "Undo"
       }
@@ -252,7 +254,7 @@ class App extends Component {
           pageRangeSelectionHandler={this.pageRangeSelectionHandler}
           optionSelectionHandler={this.optionSelectionHandler}
         />
-        <Toaster position={Position.TOP_RIGHT} ref={this.refHandlers.toaster} />
+        <Toaster position={Position.BOTTOM} ref={this.refHandlers.toaster} />
       </div>
     );
   }

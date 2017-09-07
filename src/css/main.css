@@ -51,14 +51,18 @@ body {
   padding: 1em 0;
 }
 
-.navbar {
-  margin: 0 auto;
-  width: 1024px;
-}
-
 .treebuttons {
   margin-top: 1em;
   margin-bottom: 1em;
+}
+
+.list {
+  margin-top: 4.15em;
+}
+
+.content {
+  margin-left: 1em;
+  margin-right: 1em;
 }
 
 .drag-handle {

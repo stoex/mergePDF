@@ -15,7 +15,7 @@ const SortableItem = SortableElement(
   ({ obj, openFile, removeFromMergeList, sortIndex, toggleDialog }) => {
     return (
       <div>
-        <section className={"pt-elevation-0"}>
+        <section>
           <div className={"column mergelist-item"}>
             <DragHandle />
           </div>
