@@ -110,7 +110,9 @@ class MergeList extends Component {
         openFile={this.props.openFile}
         removeFromMergeList={this.props.removeFromMergeList}
         toggleDialog={this.props.toggleDialog}
-        helperClass="SortableHelper"
+        helperClass={
+          this.props.theme === true ? "sortable-light" : "sortable-dark"
+        }
       />
     );
   }

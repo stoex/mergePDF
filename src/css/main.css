@@ -91,10 +91,17 @@ body {
   background-color: #293742;
 }
 
-.SortableHelper {
+.sortable-light {
   box-shadow: 0 5px 5px -5px rgba(0, 0, 0, 0.2),
     0 -5px 5px -5px rgba(0, 0, 0, 0.2);
   background-color: rgba(255, 255, 255, 0.8);
+  cursor: row-resize;
+}
+
+.sortable-dark {
+  box-shadow: 0 5px 5px -5px rgba(255, 255, 255, 0.8),
+    0 -5px 5px -5px rgba(255, 255, 255, 0.8);
+  background-color: rgba(41, 55, 66, 0.8);
   cursor: row-resize;
 }
 

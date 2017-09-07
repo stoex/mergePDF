@@ -33,6 +33,7 @@ class ContentArea extends Component {
               removeFromMergeList={this.props.removeFromMergeList}
               toggleDialog={this.props.toggleDialog}
               className="SortableList"
+              theme={this.props.theme}
             />
             {this.props.merge.map(o => {
               if (o.pages > 1) {
