@@ -29,8 +29,12 @@ const SortableItem = SortableElement(
           <div className={"mergelist-item"}>
             <DragHandle />
           </div>
-          <div className={"column mergelist-item"}>{obj.label}</div>
-          <div className={"column mergelist-item"}>{options(obj)}</div>
+          <div className={"column mergelist-item pt-text-overflow-ellipsis"}>
+            {obj.label}
+          </div>
+          <div className={"column mergelist-item pt-text-overflow-ellipsis"}>
+            {options(obj)}
+          </div>
           <div className={"column pt-button-group pt-minimal"}>
             <a
               onClick={i => {

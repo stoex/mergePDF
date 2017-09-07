@@ -15,7 +15,8 @@ class App extends Component {
     super();
     this.state = {
       nodes: [],
-      merge: []
+      merge: [],
+      theme: true
     };
   }
 
@@ -212,6 +213,11 @@ class App extends Component {
     this.toaster.show(toast);
   };
 
+  toggleTheme = () => {
+    document.body.classList.toggle("pt-dark", this.state.theme);
+    this.setState({ theme: !this.state.theme });
+  };
+
   render() {
     if (this.state.nodes.length !== 0) {
       let i = 0;
@@ -229,12 +235,13 @@ class App extends Component {
     }
 
     return (
-      <div>
+      <div className={this.state.theme === false ? "pt-dark" : "pt-light"}>
         <AppMenu
           openFolder={this.openFolder}
           nodes={this.state.nodes}
           options={this.state.options}
           showFile={this.showFile}
+          toggleTheme={this.toggleTheme}
         />
         <ContentArea
           nodes={this.state.nodes}

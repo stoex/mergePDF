@@ -64,6 +64,11 @@ body {
   margin-right: 1em;
 }
 
+.navbar {
+  width: 1024px;
+  margin: 0 auto;
+}
+
 .drag-handle {
   display: inline-block;
   margin-left: 1em;
@@ -80,6 +85,10 @@ body {
   display: flex;
   justify-content: center;
   flex-direction: column;
+}
+
+.pt-dark {
+  background-color: #293742;
 }
 
 .SortableHelper {
