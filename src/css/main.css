@@ -1,5 +1,4 @@
 section {
-  max-width: 1024px;
   margin: 0 auto;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -67,8 +66,8 @@ body {
 
 .drag-handle {
   display: inline-block;
-  margin-left: 2em;
-  margin-right: 1em;
+  margin-left: 1em;
+  margin-right: 3em;
   width: 16px;
   cursor: pointer;
 }

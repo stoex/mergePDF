@@ -13,14 +13,25 @@ const DragHandle = SortableHandle(() => (
 
 const SortableItem = SortableElement(
   ({ obj, openFile, removeFromMergeList, sortIndex, toggleDialog }) => {
+    const options = obj => {
+      switch (obj.option) {
+        case "whole":
+          return `Option: whole document - page 1-${obj.pages}`;
+        case "single":
+          return `Option: single page - page ${obj.value}`;
+        case "range":
+          return `Option: page range ${obj.range[0]}-${obj.range[1]}`;
+      }
+    };
     return (
       <div>
         <section>
-          <div className={"column mergelist-item"}>
+          <div className={"mergelist-item"}>
             <DragHandle />
           </div>
           <div className={"column mergelist-item"}>{obj.label}</div>
-          <div className={"column pt-button-group pt-minimal button-group"}>
+          <div className={"column mergelist-item"}>{options(obj)}</div>
+          <div className={"column pt-button-group pt-minimal"}>
             <a
               onClick={i => {
                 openFile(obj.path);

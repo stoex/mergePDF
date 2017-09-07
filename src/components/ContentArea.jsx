@@ -7,7 +7,7 @@ class ContentArea extends Component {
   render() {
     return (
       <div className={"row content"}>
-        <div className={"col-xs-12 col-md-4"}>
+        <div className={"col-xs-12 col-lg-4"}>
           <FolderTree
             nodes={this.props.nodes}
             handleNodeClick={this.props.handleNodeClick}
@@ -17,7 +17,7 @@ class ContentArea extends Component {
             collapseAll={this.props.collapseAll}
           />
         </div>
-        <div className={"col-xs-12 col-md-8 list"}>
+        <div className={"col-xs-12 col-lg-8 list"}>
           <MergeList
             merge={this.props.merge}
             onSortEnd={this.props.onSortEnd}
