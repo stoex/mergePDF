@@ -15,11 +15,18 @@ class DropDownMenu extends Component {
       <Menu>
         <MenuItem
           iconName="segmented-control"
-          text="Switch theme"
+          text={
+            this.props.theme === true ? (
+              "Switch to dark theme"
+            ) : (
+              "Switch to light theme"
+            )
+          }
           onClick={i => {
             this.props.toggleTheme();
           }}
         />
+        <MenuItem iconName="help" text="Help" />
         <MenuItem iconName="translate" text="Switch language">
           <MenuItem iconName="flag" text="German" />
           <MenuItem iconName="flag" text="English" />
@@ -81,7 +88,10 @@ class AppMenu extends Component {
               />
             </div>
             <span className={"pt-navbar-divider"} />
-            <DropDownMenu toggleTheme={this.props.toggleTheme} />
+            <DropDownMenu
+              toggleTheme={this.props.toggleTheme}
+              theme={this.props.theme}
+            />
           </div>
         </div>
       </nav>

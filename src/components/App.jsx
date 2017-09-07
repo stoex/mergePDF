@@ -242,6 +242,7 @@ class App extends Component {
           options={this.state.options}
           showFile={this.showFile}
           toggleTheme={this.toggleTheme}
+          theme={this.state.theme}
         />
         <ContentArea
           nodes={this.state.nodes}
