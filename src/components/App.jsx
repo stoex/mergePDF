@@ -47,7 +47,6 @@ class App extends Component {
     });
 
     ipcRenderer.on("refresh-done", (e, a) => {
-      console.log(a);
       this.refreshDir(a);
     });
   };
@@ -85,7 +84,19 @@ class App extends Component {
   };
 
   refreshDir = data => {
-    this.setState({ nodes: data });
+    let arr = [];
+    this.forEachNode(data, i => {
+      if (i.hasOwnProperty("iconName") && i.iconName === "document") {
+        arr.push(i.path);
+      }
+    });
+    let mstate = [].concat(this.state.merge);
+    mstate = mstate.filter(i => {
+      if (arr.indexOf(i.path) !== -1) {
+        return i;
+      }
+    });
+    this.setState({ nodes: data, merge: mstate });
   };
 
   forEachNode = (nodes, callback) => {
