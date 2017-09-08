@@ -94,6 +94,14 @@ class App extends Component {
     mstate = mstate.filter(i => {
       if (arr.indexOf(i.path) !== -1) {
         return i;
+      } else {
+        const toast = {
+          iconName: "remove",
+          message: `"${i.label}" removed. File no longer exists.`,
+          intent: Intent.DANGER,
+          timeout: 2000
+        };
+        this.toaster.show(toast);
       }
     });
     this.setState({ nodes: data, merge: mstate });
