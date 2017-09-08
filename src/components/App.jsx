@@ -28,7 +28,7 @@ class App extends Component {
 
   componentDidMount = () => {
     ipcRenderer.on("directory-data", (e, a) => {
-      this.receiveState(a[0]);
+      this.addNewDir(a);
     });
 
     ipcRenderer.on("post-pdf-info", (e, a) => {
@@ -44,6 +44,11 @@ class App extends Component {
         }
       });
       this.setState({ merge: state });
+    });
+
+    ipcRenderer.on("refresh-done", (e, a) => {
+      console.log(a);
+      this.refreshDir(a);
     });
   };
 
@@ -71,10 +76,16 @@ class App extends Component {
     return seq;
   };
 
-  receiveState = data => {
+  addNewDir = data => {
     let state = [].concat(this.state.nodes);
-    state.push(data);
+    data.forEach(i => {
+      state.push(i);
+    });
     this.setState({ nodes: state });
+  };
+
+  refreshDir = data => {
+    this.setState({ nodes: data });
   };
 
   forEachNode = (nodes, callback) => {
@@ -82,10 +93,10 @@ class App extends Component {
       return;
     }
 
-    for (const node of nodes) {
-      callback(node);
+    nodes.forEach((node, i, array) => {
+      callback(node, i, array);
       this.forEachNode(node.childNodes, callback);
-    }
+    });
   };
 
   handleNodeClick = (nodeData, _nodePath, e) => {
@@ -131,7 +142,7 @@ class App extends Component {
       n.isSelected = false;
     });
     if (e.target.value !== "") {
-      this.forEachNode(this.state.nodes, n => {
+      this.forEachNode(this.state.nodes, (n, idx) => {
         if (n.iconName === "document") {
           return n.label.toUpperCase().includes(e.target.value.toUpperCase())
             ? (n.isSelected = true)
@@ -218,19 +229,19 @@ class App extends Component {
     this.setState({ theme: !this.state.theme });
   };
 
+  refreshCurrentNodes = () => {
+    const paths = this.state.nodes.map(i => {
+      return i.path;
+    });
+    console.log(paths);
+    ipcRenderer.send("refresh-nodes", paths);
+  };
+
   render() {
     if (this.state.nodes.length !== 0) {
       let i = 0;
-      this.forEachNode(this.state.nodes, n => {
+      this.forEachNode(this.state.nodes, (n, index, arr) => {
         n.id = i++;
-        if (n.hasOwnProperty("childNodes")) {
-          return n.childNodes.length === 0
-            ? n.childNodes.push({
-                iconName: "warning-sign",
-                label: "This folder is empty."
-              })
-            : null;
-        }
       });
     }
 
@@ -242,6 +253,7 @@ class App extends Component {
           options={this.state.options}
           showFile={this.showFile}
           toggleTheme={this.toggleTheme}
+          refreshCurrentNodes={this.refreshCurrentNodes}
           theme={this.state.theme}
         />
         <ContentArea

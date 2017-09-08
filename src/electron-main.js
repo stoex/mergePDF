@@ -81,9 +81,30 @@ Array.prototype.unique = function() {
 };
 
 const listFiles = src => {
-  const folderArr = glob.sync(`${src}/**/`);
-  const fileArr = glob.sync(`${src}/**/*.pdf`);
-  return folderArr.concat(fileArr).unique();
+  let srcNodes = [];
+  src.forEach(item => {
+    const folderArr = [
+      `${item.match(/\\$/)
+        ? item.replace(/\\/g, "/")
+        : item.replace(/\\/g, "/") + "/"}`
+    ];
+    const fileArr = glob.sync(`${item}/**/*.pdf`);
+    fileArr.forEach(i => {
+      const subFolders = i
+        .replace(folderArr[0], "")
+        .split("/")
+        .splice(0, 1);
+      subFolders.forEach((j, idx) => {
+        if (!j.match(/pdf$/)) {
+          idx === 0
+            ? folderArr.push(folderArr[0] + j + "/")
+            : folderarr.push(folderArr[-1] + j + "/");
+        }
+      });
+    });
+    srcNodes.push(folderArr.concat(fileArr).unique());
+  });
+  return srcNodes;
 };
 
 const addToNode = (currentNode, label, toAdd) => {
@@ -113,7 +134,8 @@ const createRootDir = (path, array) => {
     hasCaret: true,
     iconName: "folder-close",
     label: label,
-    childNodes: []
+    childNodes: [],
+    path: path
   };
   array.push(obj);
 };
@@ -125,7 +147,8 @@ const createChildDir = (path, basepath, array) => {
     hasCaret: true,
     iconName: "folder-close",
     label: label,
-    childNodes: []
+    childNodes: [],
+    path: path
   };
   addToNode(array, parent, obj);
 };
@@ -149,26 +172,27 @@ const createFile = (path, array) => {
 
 const createDataArray = data => {
   let arr = [];
-  const basePath = data[0];
-  data.forEach((i, idx) => {
-    let isDir;
-    if (os === "win32") {
-      i = i.replace(/\//g, "\\");
-      isDir = /\\$/.test(i);
-    } else {
-      isDir = /\/$/.test(i);
-    }
-    if (isDir) {
-      if (idx === 0) {
-        createRootDir(i, arr);
+  data.forEach(item => {
+    const basePath = item[0];
+    item.forEach((i, idx) => {
+      let isDir;
+      if (os === "win32") {
+        i = i.replace(/\//g, "\\");
+        isDir = /\\$/.test(i);
       } else {
-        createChildDir(i, basePath, arr);
+        isDir = /\/$/.test(i);
       }
-    } else {
-      createFile(i, arr);
-    }
+      if (isDir) {
+        if (idx === 0) {
+          createRootDir(i, arr);
+        } else {
+          createChildDir(i, basePath, arr);
+        }
+      } else {
+        createFile(i, arr);
+      }
+    });
   });
-
   return arr;
 };
 
@@ -215,4 +239,10 @@ ipcMain.on("get-pdf-info", (e, a) => {
   getPdfInfo(a, data => {
     e.sender.send("post-pdf-info", data);
   });
+});
+
+ipcMain.on("refresh-nodes", (e, a) => {
+  const files = listFiles(a);
+  const data = createDataArray(files);
+  mainWindow.webContents.send("refresh-done", data);
 });

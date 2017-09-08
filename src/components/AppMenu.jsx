@@ -63,7 +63,9 @@ class AppMenu extends Component {
             <span className={"pt-navbar-divider"} />
             <button
               className={"pt-button pt-minimal pt-icon-refresh"}
-              onClick={console.log("clicked refresh")}
+              onClick={i => {
+                this.props.refreshCurrentNodes();
+              }}
             >
               {"Refresh Folder"}
             </button>
