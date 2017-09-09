@@ -299,6 +299,7 @@ class App extends Component {
         <AppMenu
           openFolder={this.openFolder}
           nodes={this.state.nodes}
+          merge={this.state.merge}
           options={this.state.options}
           showFile={this.showFile}
           toggleTheme={this.toggleTheme}

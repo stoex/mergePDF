@@ -62,7 +62,13 @@ class AppMenu extends Component {
             </button>
             <span className={"pt-navbar-divider"} />
             <button
-              className={"pt-button pt-minimal pt-icon-refresh"}
+              className={
+                this.props.nodes.length === 0 ? (
+                  "pt-button pt-minimal pt-icon-refresh pt-disabled"
+                ) : (
+                  "pt-button pt-minimal pt-icon-refresh"
+                )
+              }
               onClick={i => {
                 this.props.refreshCurrentNodes();
               }}
@@ -72,7 +78,13 @@ class AppMenu extends Component {
           </div>
           <div className={"pt-navbar-group pt-align-right"}>
             <button
-              className={"pt-button pt-minimal pt-icon-merge-columns"}
+              className={
+                this.props.merge.length < 2 ? (
+                  "pt-button pt-minimal pt-icon-merge-columns pt-disabled"
+                ) : (
+                  "pt-button pt-minimal pt-icon-merge-columns"
+                )
+              }
               onClick={i => {
                 this.props.mergeFiles();
               }}
