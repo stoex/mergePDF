@@ -11,8 +11,7 @@
       "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
       "program": "${workspaceRoot}/src/electron-main.js",
       "protocol": "inspector",
-      "console": "internalConsole",
-      "env": { "ELECTRON_START_URL": "http://localhost:3000" }
+      "console": "internalConsole"
     },
     {
       "type": "node",

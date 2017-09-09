@@ -6,7 +6,7 @@ import "@blueprintjs/core/dist/blueprint.css";
 import "../css/main.css";
 import ContentArea from "./ContentArea.jsx";
 import { arrayMove } from "react-sortable-hoc";
-import { Toaster, Position, Intent } from "@blueprintjs/core";
+import { Toaster, Position, Intent, ProgressBar } from "@blueprintjs/core";
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
 
@@ -50,15 +50,20 @@ class App extends Component {
     });
 
     ipcRenderer.on("merge-finished", (e, a) => {
-      this.setState({ isMerging: false });
-      console.log(`${a} successfully saved`);
       const toast = {
         iconName: "tick",
-        message: `${a} successfully saved!`,
+        message: `${a.file} successfully saved!`,
         intent: Intent.SUCCESS,
         timeout: 2000
       };
+      this.toaster.clear();
       this.toaster.show(toast);
+    });
+
+    ipcRenderer.on("start-toaster", (e, a) => {
+      const key = this.toaster.show(this.renderProgress(Intent.PRIMARY));
+      console.log(key);
+      ipcRenderer.send("toaster-info", key);
     });
   };
 
@@ -67,6 +72,7 @@ class App extends Component {
     ipcRenderer.removeListener("post-pdf-info");
     ipcRenderer.removeListener("refresh-done");
     ipcRenderer.removeListener("merge-finished");
+    ipcRenderer.removeListener("start-toaster");
   };
 
   randomID = () => {
@@ -265,13 +271,19 @@ class App extends Component {
     const paths = this.state.nodes.map(i => {
       return i.path;
     });
-    console.log(paths);
     ipcRenderer.send("refresh-nodes", paths);
   };
 
   mergeFiles = () => {
-    this.setState({ isMerging: true });
     ipcRenderer.send("merge-files", this.state.merge);
+  };
+
+  renderProgress = intent => {
+    return {
+      iconName: "cloud",
+      message: <ProgressBar intent={intent} />,
+      timeout: intent === Intent.SUCCESS ? 50 : 10000
+    };
   };
 
   render() {

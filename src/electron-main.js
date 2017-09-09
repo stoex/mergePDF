@@ -15,6 +15,7 @@ const url = require("url");
 const { dialog, ipcMain, shell } = electron;
 
 let mainWindow;
+let toasterKey;
 
 function createWindow() {
   // Create the browser window.
@@ -241,8 +242,12 @@ const getPdfInfo = (obj, callback) => {
 };
 
 const merge = (newFile, files) => {
+  mainWindow.webContents.send("start-toaster");
   PDFMerge(files, { output: newFile }).then(
-    mainWindow.webContents.send("merge-finished", newFile)
+    mainWindow.webContents.send("merge-finished", {
+      file: newFile,
+      toaster: toasterKey
+    })
   );
 };
 
@@ -272,4 +277,8 @@ ipcMain.on("refresh-nodes", (e, a) => {
 
 ipcMain.on("merge-files", (e, a) => {
   saveFileDialog(a);
+});
+
+ipcMain.on("toaster-info", (e, a) => {
+  toasterKey = a;
 });
