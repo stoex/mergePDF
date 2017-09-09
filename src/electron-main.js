@@ -8,6 +8,7 @@ const Path = require("path");
 const fs = require("fs");
 const os = require("os").platform();
 const PDFJS = require("pdfjs-dist");
+const PDFMerge = require("./merge");
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const url = require("url");
@@ -213,6 +214,22 @@ const openDirectory = () => {
   );
 };
 
+const saveFileDialog = files => {
+  dialog.showSaveDialog(
+    {
+      filters: [
+        {
+          name: "Adobe PDF",
+          extensions: ["pdf"]
+        }
+      ]
+    },
+    filename => {
+      merge(filename, files);
+    }
+  );
+};
+
 const getPdfInfo = (obj, callback) => {
   const copy = Object.assign({}, obj);
   const raw = new Uint8Array(fs.readFileSync(copy.path));
@@ -221,6 +238,12 @@ const getPdfInfo = (obj, callback) => {
     copy.pages = doc.pdfInfo.numPages;
     callback(copy);
   });
+};
+
+const merge = (newFile, files) => {
+  PDFMerge(files, { output: newFile }).then(
+    mainWindow.webContents.send("merge-finished", newFile)
+  );
 };
 
 const openFile = a => {
@@ -245,4 +268,8 @@ ipcMain.on("refresh-nodes", (e, a) => {
   const files = listFiles(a);
   const data = createDataArray(files);
   mainWindow.webContents.send("refresh-done", data);
+});
+
+ipcMain.on("merge-files", (e, a) => {
+  saveFileDialog(a);
 });

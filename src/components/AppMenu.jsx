@@ -73,7 +73,9 @@ class AppMenu extends Component {
           <div className={"pt-navbar-group pt-align-right"}>
             <button
               className={"pt-button pt-minimal pt-icon-merge-columns"}
-              onClick={console.log("clicked merge")}
+              onClick={i => {
+                this.props.mergeFiles();
+              }}
             >
               {"Merge List"}
             </button>

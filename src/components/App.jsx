@@ -38,7 +38,6 @@ class App extends Component {
           o.pages = a.pages;
           o.range = [1, a.pages];
           o.id = this.randomID();
-          o.choice = "whole";
           o.value = 1;
           o.isOpen = false;
         }
@@ -49,11 +48,25 @@ class App extends Component {
     ipcRenderer.on("refresh-done", (e, a) => {
       this.refreshDir(a);
     });
+
+    ipcRenderer.on("merge-finished", (e, a) => {
+      this.setState({ isMerging: false });
+      console.log(`${a} successfully saved`);
+      const toast = {
+        iconName: "tick",
+        message: `${a} successfully saved!`,
+        intent: Intent.SUCCESS,
+        timeout: 2000
+      };
+      this.toaster.show(toast);
+    });
   };
 
   componentWillUnmount = () => {
     ipcRenderer.removeListener("directory-data");
     ipcRenderer.removeListener("post-pdf-info");
+    ipcRenderer.removeListener("refresh-done");
+    ipcRenderer.removeListener("merge-finished");
   };
 
   randomID = () => {
@@ -256,6 +269,11 @@ class App extends Component {
     ipcRenderer.send("refresh-nodes", paths);
   };
 
+  mergeFiles = () => {
+    this.setState({ isMerging: true });
+    ipcRenderer.send("merge-files", this.state.merge);
+  };
+
   render() {
     if (this.state.nodes.length !== 0) {
       let i = 0;
@@ -273,6 +291,7 @@ class App extends Component {
           showFile={this.showFile}
           toggleTheme={this.toggleTheme}
           refreshCurrentNodes={this.refreshCurrentNodes}
+          mergeFiles={this.mergeFiles}
           theme={this.state.theme}
         />
         <ContentArea
