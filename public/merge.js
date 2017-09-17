@@ -7,7 +7,7 @@ const child = require("child_process");
 const Promise = require("bluebird");
 const PassThrough = require("stream").PassThrough;
 const shellescape = require("shell-escape");
-
+const path = require("path");
 const execFile = Promise.promisify(child.execFile);
 const exec = Promise.promisify(child.exec);
 const readFile = Promise.promisify(fs.readFile);
@@ -47,7 +47,7 @@ module.exports = (files, options) =>
       {
         libPath: `${process.env.PATH.match(/pdftk/) !== null
           ? "pdftk"
-          : __dirname + "\\libs\\pdftk.exe"}`,
+          : "file://" + path.join(__dirname, "../build/libs/pdftk.exe")}`,
         output: Buffer
       },
       options

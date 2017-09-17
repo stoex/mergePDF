@@ -6,9 +6,24 @@ import {
   Popover,
   Position
 } from "@blueprintjs/core";
+
+import { Select } from "@blueprintjs/labs";
+
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
 
+class SearchBox extends Component {
+  state = {
+    closeOnSelect: true,
+    data: "1",
+    minimal: true,
+    openOnKeydown: true
+  };
+
+  handleCloseOnSelectChange = this.handleSwitchChange("closeOnSelect");
+  handleOpenOnKeyDownChange = this.handleSwitchChange("openOnKeyDown");
+  handleMinimalChange = this.handleSwitchChange("minimal");
+}
 class DropDownMenu extends Component {
   render() {
     const menu = (

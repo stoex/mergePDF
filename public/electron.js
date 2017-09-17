@@ -1,17 +1,14 @@
 const electron = require("electron");
-const {
-  default: installExtension,
-  REACT_DEVELOPER_TOOLS
-} = require("electron-devtools-installer");
-const glob = require("glob");
 const Path = require("path");
 const fs = require("fs");
 const os = require("os").platform();
+const glob = require("glob");
 const PDFJS = require("pdfjs-dist");
 const PDFMerge = require("./merge");
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const url = require("url");
+const isDev = require("electron-is-dev");
 const { dialog, ipcMain, shell } = electron;
 
 let mainWindow;
@@ -22,17 +19,15 @@ function createWindow() {
   mainWindow = new BrowserWindow({ width: 800, height: 600 });
 
   // and load the index.html of the app.
-  const startUrl =
-    process.env.ELECTRON_START_URL ||
-    url.format({
-      pathname: Path.join(__dirname, "/../build/index.html"),
-      protocol: "file:",
-      slashes: true
-    });
-  mainWindow.loadURL(startUrl);
+  mainWindow.loadURL(
+    isDev
+      ? "http://localhost:3000"
+      : `file://${Path.join(__dirname, "../build/index.html")}`
+  );
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
-
+  if (isDev) {
+    mainWindow.webContents.openDevTools();
+  }
   // Emitted when the window is closed.
   mainWindow.on("closed", function() {
     // Dereference the window object, usually you would store windows
@@ -47,9 +42,15 @@ function createWindow() {
 // Some APIs can only be used after this event occurs.
 app.on("ready", () => {
   createWindow();
-  installExtension(REACT_DEVELOPER_TOOLS)
-    .then(name => console.log(`Added Extension:  ${name}`))
-    .catch(err => console.log("An error occurred: ", err));
+  if (isDev) {
+    const {
+      default: installExtension,
+      REACT_DEVELOPER_TOOLS
+    } = require("electron-devtools-installer");
+    installExtension(REACT_DEVELOPER_TOOLS)
+      .then(name => console.log(`Added Extension:  ${name}`))
+      .catch(err => console.log("An error occurred: ", err));
+  }
 });
 
 // Quit when all windows are closed.

@@ -1,19 +1,20 @@
 {
-  "name": "electron-with-create-react-app",
-  "version": "0.1.0",
-  "private": true,
+  "name": "mergepdf",
+  "description": "Merge PDF's with ease.",
+  "version": "1.0.0",
+  "author": "Christian Nicola",
   "devDependencies": {
+    "concurrently": "^3.5.0",
     "electron": "^1.4.14",
+    "electron-builder": "^19.27.7",
     "electron-devtools-installer": "^2.2.0",
-    "foreman": "^2.0.0",
-    "react-scripts": "0.8.5"
+    "react-scripts": "0.8.5",
+    "wait-on": "^2.0.2"
   },
   "dependencies": {
     "@blueprintjs/core": "^1.25.1",
-    "@types/pure-render-decorator": "^0.2.28",
-    "@types/react": "^16.0.4",
-    "@types/react-addons-css-transition-group": "^15.0.3",
-    "@types/react-dom": "^15.5.4",
+    "@blueprintjs/labs": "^0.8.0",
+    "bluebird": "^3.5.0",
     "flexboxgrid": "^6.3.1",
     "glob": "^7.1.2",
     "normalize.css": "^7.0.0",
@@ -21,16 +22,25 @@
     "react": "^15.4.2",
     "react-addons-css-transition-group": "^15.6.0",
     "react-dom": "^15.4.2",
-    "react-sortable-hoc": "^0.6.7"
+    "react-sortable-hoc": "^0.6.7",
+    "shell-escape": "^0.2.0",
+    "tmp": "0.0.33",
+    "electron-is-dev": "^0.3.0"
   },
   "homepage": "./",
-  "main": "src/electron-main.js",
+  "main": "public/electron.js",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "electron": "electron .",
-    "dev": "nf start -p 3000"
+    "dev":
+      "concurrently \"npm start\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron-pack": "build --em.main=build/electron.js",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "build": {
+    "appId": "com.example.mergepdf",
+    "files": ["build/**/*", "node_modules/**/*", "node_modules/tmp"]
   }
 }
