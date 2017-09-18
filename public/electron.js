@@ -3,6 +3,7 @@ const Path = require("path");
 const fs = require("fs");
 const os = require("os").platform();
 const glob = require("glob");
+const log = require("electron-log");
 const PDFJS = require("pdfjs-dist");
 const PDFMerge = require("./merge");
 const app = electron.app;
@@ -244,12 +245,21 @@ const getPdfInfo = (obj, callback) => {
 
 const merge = (newFile, files) => {
   mainWindow.webContents.send("start-toaster");
-  PDFMerge(files, { output: newFile }).then(
-    mainWindow.webContents.send("merge-finished", {
-      file: newFile,
-      toaster: toasterKey
-    })
-  );
+  PDFMerge(files, { output: newFile })
+    .then(
+      mainWindow.webContents.send("merge-finished", {
+        file: newFile,
+        toaster: toasterKey
+      })
+    )
+    .catch(
+      err => {
+        console.log(err);
+      },
+      err => {
+        log.error(err);
+      }
+    );
 };
 
 const openFile = a => {

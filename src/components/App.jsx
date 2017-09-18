@@ -294,8 +294,6 @@ class App extends Component {
       });
     }
 
-    console.log(__dirname);
-
     return (
       <div className={this.state.theme === false ? "pt-dark" : "pt-light"}>
         <AppMenu

@@ -4,6 +4,7 @@ const fs = require("fs");
 const os = require("os");
 const tmp = require("tmp");
 const child = require("child_process");
+const log = require("electron-log");
 const Promise = require("bluebird");
 const PassThrough = require("stream").PassThrough;
 const shellescape = require("shell-escape");
@@ -47,7 +48,7 @@ module.exports = (files, options) =>
       {
         libPath: `${process.env.PATH.match(/pdftk/) !== null
           ? "pdftk"
-          : "file://" + path.join(__dirname, "../build/libs/pdftk.exe")}`,
+          : path.join(__dirname, "../../../libs/pdftk.exe")}`,
         output: Buffer
       },
       options
@@ -84,6 +85,9 @@ module.exports = (files, options) =>
       isWindows && options.libPath !== "pdftk"
         ? execFile(options.libPath, args)
         : exec(`${options.libPath} ${args.join(" ")}`);
+
+    log.error(JSON.stringify(options));
+    log.error(JSON.stringify(args));
 
     childPromise
       .then(() => readFile(tmpFilePath))
