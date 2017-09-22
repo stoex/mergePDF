@@ -1,13 +1,9 @@
 import React, { Component } from "react";
-import {
-  Menu,
-  MenuDivider,
-  MenuItem,
-  Popover,
-  Position
-} from "@blueprintjs/core";
-
-import { Select } from "@blueprintjs/labs";
+import classNames from "classnames/bind";
+import PropTypes from "prop-types";
+import { Menu, MenuItem, Popover, Position, Classes } from "@blueprintjs/core";
+import { Suggest } from "@blueprintjs/labs";
+import { TOP_100_FILMS } from "./data.js";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -15,14 +11,66 @@ const ipcRenderer = electron.ipcRenderer;
 class SearchBox extends Component {
   state = {
     closeOnSelect: true,
-    data: "1",
+    selection: TOP_100_FILMS[0],
     minimal: true,
-    openOnKeydown: true
+    openOnKeydown: true,
+    disabled: false,
+    filterable: true,
+    resetOnClose: false,
+    resetOnSelect: false
   };
 
-  handleCloseOnSelectChange = this.handleSwitchChange("closeOnSelect");
-  handleOpenOnKeyDownChange = this.handleSwitchChange("openOnKeyDown");
-  handleMinimalChange = this.handleSwitchChange("minimal");
+  render() {
+    const { selection, minimal, ...flags } = this.state;
+    return (
+      <Suggest
+        {...flags}
+        inputValueRenderer={this.renderInputValue}
+        items={TOP_100_FILMS}
+        itemPredicate={this.filterData}
+        itemRenderer={this.renderData}
+        noResults={<MenuItem disabled text="No results." />}
+        onItemSelect={this.handleValueChange}
+        popoverProps={{
+          popoverClassName: this.state.minimal
+            ? "pt-minimal pt-select-popover"
+            : "pt-select-popover"
+        }}
+      />
+    );
+  }
+
+  renderInputValue = data => {
+    return data.title;
+  };
+
+  renderData = ({ handleClick, isActive, item }) => {
+    const classes = classNames({
+      [Classes.ACTIVE]: isActive,
+      [Classes.INTENT_PRIMARY]: isActive
+    });
+    return (
+      <MenuItem
+        className={classes}
+        label={item.year.toString()}
+        key={item.rank}
+        onClick={handleClick}
+        text={`${item.rank}. ${item.title}`}
+      />
+    );
+  };
+
+  handleValueChange = data => {
+    this.setState({ data });
+  };
+
+  filterData(query, film, index) {
+    return (
+      `${index + 1}. ${film.title.toLowerCase()} ${film.year}`.indexOf(
+        query.toLowerCase()
+      ) >= 0
+    );
+  }
 }
 class DropDownMenu extends Component {
   render() {
@@ -107,17 +155,8 @@ class AppMenu extends Component {
               {"Merge List"}
             </button>
             <span className={"pt-navbar-divider"} />
-            <div className={"pt-input-group default"}>
-              <span className={"pt-icon pt-icon-search"} />
-              <input
-                className={"pt-input"}
-                type={"search"}
-                placeholder={"Search input"}
-                dir={"auto"}
-                onChange={this.props.showFile}
-                onKeyPress={this.handleKeyPress}
-              />
-            </div>
+            <span className={"pt-icon pt-icon-search search"} />
+            <SearchBox />
             <span className={"pt-navbar-divider"} />
             <DropDownMenu
               toggleTheme={this.props.toggleTheme}
@@ -129,5 +168,20 @@ class AppMenu extends Component {
     );
   }
 }
+
+AppMenu.propTypes = {
+  showFile: PropTypes.func.isRequired,
+  theme: PropTypes.bool.isRequired,
+  toggleTheme: PropTypes.func.isRequired,
+  mergeFiles: PropTypes.func.isRequired,
+  refreshCurrentNodes: PropTypes.func.isRequired,
+  merge: PropTypes.array,
+  nodes: PropTypes.array
+};
+
+DropDownMenu.propTypes = {
+  theme: PropTypes.bool.isRequired,
+  toggleTheme: PropTypes.func.isRequired
+};
 
 export default AppMenu;

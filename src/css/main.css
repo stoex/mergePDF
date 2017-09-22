@@ -109,3 +109,14 @@ body {
 .SortableList {
   z-index: 0;
 }
+
+.pt-select-popover {
+  max-width: 400px;
+  max-height: 300px;
+  overflow: auto;
+  padding: 0;
+}
+
+.search {
+  margin-right: 10px;
+}
