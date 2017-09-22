@@ -20,8 +20,28 @@ class SearchBox extends Component {
     resetOnSelect: false
   };
 
+  collectFiles = (node, arr) => {
+    if (node instanceof Array) {
+      for (let i = 0; i < node.length; i++) {
+        this.collectFiles(node[i], arr);
+      }
+    } else {
+      for (const prop in node) {
+        if (prop === "iconName") {
+          if (node[prop] == "document") {
+            arr.push(node);
+          }
+        }
+        if (node[prop] instanceof Object || node[prop] instanceof Array)
+          this.collectFiles(node[prop], arr);
+      }
+    }
+  };
+
   render() {
     const { selection, minimal, ...flags } = this.state;
+    const data = this.collectFiles(this.props.nodes, []);
+    console.log(data);
     return (
       <Suggest
         {...flags}
@@ -156,7 +176,7 @@ class AppMenu extends Component {
             </button>
             <span className={"pt-navbar-divider"} />
             <span className={"pt-icon pt-icon-search search"} />
-            <SearchBox />
+            <SearchBox nodes={this.props.nodes} />
             <span className={"pt-navbar-divider"} />
             <DropDownMenu
               toggleTheme={this.props.toggleTheme}
