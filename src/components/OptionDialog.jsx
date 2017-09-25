@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import {
   Dialog,
   Button,
@@ -102,5 +103,12 @@ class OptionDialog extends Component {
     }
   }
 }
+
+OptionDialog.propTypes = {
+  toggleDialog: PropTypes.func.isRequired,
+  pageRangeSelectionHandler: PropTypes.func.isRequired,
+  pageSelectionHandler: PropTypes.func.isRequired,
+  optionSelectionHandler: PropTypes.func.isRequired
+};
 
 export default OptionDialog;

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { Tree } from "@blueprintjs/core";
 class FolderTree extends Component {
   render() {
@@ -34,5 +35,14 @@ class FolderTree extends Component {
     );
   }
 }
+
+FolderTree.propTypes = {
+  nodes: PropTypes.any,
+  handleNodeClick: PropTypes.func.isRequired,
+  handleNodeCollapse: PropTypes.func.isRequired,
+  handleNodeExpand: PropTypes.func.isRequired,
+  expandAll: PropTypes.func.isRequired,
+  collapseAll: PropTypes.func.isRequired
+};
 
 export default FolderTree;

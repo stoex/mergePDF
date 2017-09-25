@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import {
   SortableContainer,
   SortableElement,
@@ -117,5 +118,14 @@ class MergeList extends Component {
     );
   }
 }
+
+MergeList.propTypes = {
+  merge: PropTypes.any,
+  onSortEnd: PropTypes.func.isRequired,
+  openFile: PropTypes.func.isRequired,
+  removeFromMergeList: PropTypes.func.isRequired,
+  toggleDialog: PropTypes.func.isRequired,
+  theme: PropTypes.bool.isRequired
+};
 
 export default MergeList;

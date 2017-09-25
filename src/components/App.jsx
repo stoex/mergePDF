@@ -319,8 +319,6 @@ class App extends Component {
           collapseAll={this.collapseAll}
           expandAll={this.expandAll}
           onSortEnd={this.onSortEnd}
-          handleChoice={this.handleChoice}
-          collapseOptions={this.collapseOptions}
           openFile={this.openFile}
           removeFromMergeList={this.removeFromMergeList}
           toggleDialog={this.toggleDialog}

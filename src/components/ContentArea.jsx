@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import FolderTree from "./FolderTree";
 import MergeList from "./MergeList";
 import OptionDialog from "./OptionDialog";
@@ -63,5 +64,23 @@ class ContentArea extends Component {
     }
   }
 }
+
+ContentArea.propTypes = {
+  nodes: PropTypes.any,
+  merge: PropTypes.any,
+  handleNodeClick: PropTypes.func.isRequired,
+  handleNodeCollapse: PropTypes.func.isRequired,
+  handleNodeExpand: PropTypes.func.isRequired,
+  collapseAll: PropTypes.func.isRequired,
+  expandAll: PropTypes.func.isRequired,
+  onSortEnd: PropTypes.func.isRequired,
+  openFile: PropTypes.func.isRequired,
+  removeFromMergeList: PropTypes.func.isRequired,
+  toggleDialog: PropTypes.func.isRequired,
+  pageSelectionHandler: PropTypes.func.isRequired,
+  pageRangeSelectionHandler: PropTypes.func.isRequired,
+  optionSelectionHandler: PropTypes.func.isRequired,
+  theme: PropTypes.bool.isRequired
+};
 
 export default ContentArea;

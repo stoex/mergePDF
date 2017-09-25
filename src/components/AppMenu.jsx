@@ -33,7 +33,7 @@ class SearchBox extends Component {
     } else {
       for (const prop in node) {
         if (prop === "iconName") {
-          if (node[prop] == "document") {
+          if (node[prop] === "document") {
             arr.push(node);
           }
         }
@@ -203,6 +203,11 @@ AppMenu.propTypes = {
 DropDownMenu.propTypes = {
   theme: PropTypes.bool.isRequired,
   toggleTheme: PropTypes.func.isRequired
+};
+
+SearchBox.propTypes = {
+  nodes: PropTypes.any,
+  handleClick: PropTypes.func.isRequired
 };
 
 export default AppMenu;
