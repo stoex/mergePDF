@@ -121,6 +121,7 @@ class App extends Component {
           timeout: 2000
         };
         this.toaster.show(toast);
+        return null;
       }
     });
     this.setState({ nodes: data, merge: mstate });
@@ -138,8 +139,6 @@ class App extends Component {
   };
 
   handleNodeClick = (nodeData, _nodePath, e) => {
-    console.log("nodeClick fired");
-    console.log(JSON.stringify(nodeData));
     if (nodeData.hasOwnProperty("option")) {
       const data = Object.assign({}, nodeData);
       this.addToast(data);

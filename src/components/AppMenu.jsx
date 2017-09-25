@@ -44,10 +44,8 @@ class SearchBox extends Component {
   };
 
   render() {
-    const { selection, minimal, ...flags } = this.state;
     return (
       <Suggest
-        {...flags}
         inputValueRenderer={this.renderInputValue}
         items={this.state.items}
         itemPredicate={this.filterData}

@@ -56,6 +56,8 @@ class ContentArea extends Component {
                     pages={o.pages}
                   />
                 );
+              } else {
+                return null;
               }
             })}
           </div>

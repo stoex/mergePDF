@@ -22,6 +22,8 @@ const SortableItem = SortableElement(
           return `Option: page ${obj.value}`;
         case "range":
           return `Option: pages ${obj.range[0]}-${obj.range[1]}`;
+        default:
+          return "";
       }
     };
     return (
