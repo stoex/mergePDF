@@ -16,11 +16,11 @@ const SortableItem = SortableElement(
     const options = obj => {
       switch (obj.option) {
         case "whole":
-          return `Option: whole document - page 1-${obj.pages}`;
+          return `Option: whole document`;
         case "single":
-          return `Option: single page - page ${obj.value}`;
+          return `Option: page ${obj.value}`;
         case "range":
-          return `Option: page range ${obj.range[0]}-${obj.range[1]}`;
+          return `Option: pages ${obj.range[0]}-${obj.range[1]}`;
       }
     };
     return (
