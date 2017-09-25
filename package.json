@@ -17,7 +17,6 @@
     "bluebird": "^3.5.0",
     "classnames": "^2.2.5",
     "electron-is-dev": "^0.3.0",
-    "electron-log": "^2.2.9",
     "flexboxgrid": "^6.3.1",
     "glob": "^7.1.2",
     "normalize.css": "^7.0.0",
@@ -37,18 +36,14 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "dev": "concurrently \"npm start\" \"wait-on http://localhost:3000 && electron .\"",
+    "dev":
+      "concurrently \"npm start\" \"wait-on http://localhost:3000 && electron .\"",
     "electron-pack": "build --em.main=build/electron.js",
     "postinstall": "electron-builder install-app-deps"
   },
   "build": {
     "appId": "com.example.mergepdf",
-    "files": [
-      "build/**/*",
-      "node_modules/**/*"
-    ],
-    "extraFiles": [
-      "libs/**/*"
-    ]
+    "files": ["build/**/*", "node_modules/**/*"],
+    "extraFiles": ["libs/**/*"]
   }
 }

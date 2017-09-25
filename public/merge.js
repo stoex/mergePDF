@@ -4,7 +4,7 @@ const fs = require("fs");
 const os = require("os");
 const tmp = require("tmp");
 const child = require("child_process");
-const log = require("electron-log");
+const isDev = require("electron-is-dev");
 const Promise = require("bluebird");
 const PassThrough = require("stream").PassThrough;
 const shellescape = require("shell-escape");
@@ -44,15 +44,25 @@ module.exports = (files, options) =>
       return;
     }
 
-    options = Object.assign(
-      {
-        libPath: `${process.env.PATH.match(/pdftk/) !== null
-          ? "pdftk"
-          : path.join(__dirname, "../../../libs/pdftk.exe")}`,
-        output: Buffer
-      },
-      options
-    );
+    options = isDev
+      ? Object.assign(
+          {
+            libPath: `${process.env.PATH.match(/pdftk/) !== null
+              ? "pdftk"
+              : path.join(__dirname, "../libs/pdftk.exe")}`,
+            output: Buffer
+          },
+          options
+        )
+      : Object.assign(
+          {
+            libPath: `${process.env.PATH.match(/pdftk/) !== null
+              ? "pdftk"
+              : path.join(__dirname, "../../../libs/pdftk.exe")}`,
+            output: Buffer
+          },
+          options
+        );
 
     const tmpFilePath = isWindows
       ? tmp.tmpNameSync()
@@ -85,9 +95,6 @@ module.exports = (files, options) =>
       isWindows && options.libPath !== "pdftk"
         ? execFile(options.libPath, args)
         : exec(`${options.libPath} ${args.join(" ")}`);
-
-    log.error(JSON.stringify(options));
-    log.error(JSON.stringify(args));
 
     childPromise
       .then(() => readFile(tmpFilePath))
