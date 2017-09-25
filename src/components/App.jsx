@@ -138,6 +138,8 @@ class App extends Component {
   };
 
   handleNodeClick = (nodeData, _nodePath, e) => {
+    console.log("nodeClick fired");
+    console.log(JSON.stringify(nodeData));
     if (nodeData.hasOwnProperty("option")) {
       const data = Object.assign({}, nodeData);
       this.addToast(data);
@@ -306,6 +308,7 @@ class App extends Component {
           refreshCurrentNodes={this.refreshCurrentNodes}
           mergeFiles={this.mergeFiles}
           theme={this.state.theme}
+          handleNodeClick={this.handleNodeClick}
         />
         <ContentArea
           nodes={this.state.nodes}

@@ -3,7 +3,6 @@ import classNames from "classnames/bind";
 import PropTypes from "prop-types";
 import { Menu, MenuItem, Popover, Position, Classes } from "@blueprintjs/core";
 import { Suggest } from "@blueprintjs/labs";
-import { TOP_100_FILMS } from "./data.js";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -11,14 +10,20 @@ const ipcRenderer = electron.ipcRenderer;
 class SearchBox extends Component {
   state = {
     closeOnSelect: true,
-    selection: TOP_100_FILMS[0],
     minimal: true,
-    openOnKeydown: true,
+    openOnKeyDown: false,
     disabled: false,
     filterable: true,
     resetOnClose: false,
-    resetOnSelect: false
+    resetOnSelect: false,
+    items: []
   };
+
+  componentWillReceiveProps(props) {
+    let arr = [];
+    this.collectFiles(props, arr);
+    this.setState({ items: arr });
+  }
 
   collectFiles = (node, arr) => {
     if (node instanceof Array) {
@@ -40,17 +45,15 @@ class SearchBox extends Component {
 
   render() {
     const { selection, minimal, ...flags } = this.state;
-    const data = this.collectFiles(this.props.nodes, []);
-    console.log(data);
     return (
       <Suggest
         {...flags}
         inputValueRenderer={this.renderInputValue}
-        items={TOP_100_FILMS}
+        items={this.state.items}
         itemPredicate={this.filterData}
         itemRenderer={this.renderData}
         noResults={<MenuItem disabled text="No results." />}
-        onItemSelect={this.handleValueChange}
+        onItemSelect={this.props.handleClick}
         popoverProps={{
           popoverClassName: this.state.minimal
             ? "pt-minimal pt-select-popover"
@@ -61,7 +64,7 @@ class SearchBox extends Component {
   }
 
   renderInputValue = data => {
-    return data.title;
+    return "";
   };
 
   renderData = ({ handleClick, isActive, item }) => {
@@ -72,21 +75,16 @@ class SearchBox extends Component {
     return (
       <MenuItem
         className={classes}
-        label={item.year.toString()}
-        key={item.rank}
-        onClick={handleClick}
-        text={`${item.rank}. ${item.title}`}
+        key={item.id}
+        onClick={i => handleClick(item)}
+        text={item.label}
       />
     );
   };
 
-  handleValueChange = data => {
-    this.setState({ data });
-  };
-
-  filterData(query, film, index) {
+  filterData(query, item, index) {
     return (
-      `${index + 1}. ${film.title.toLowerCase()} ${film.year}`.indexOf(
+      `${index + 1}. ${item.label.toLowerCase()}`.indexOf(
         query.toLowerCase()
       ) >= 0
     );
@@ -176,7 +174,10 @@ class AppMenu extends Component {
             </button>
             <span className={"pt-navbar-divider"} />
             <span className={"pt-icon pt-icon-search search"} />
-            <SearchBox nodes={this.props.nodes} />
+            <SearchBox
+              nodes={this.props.nodes}
+              handleClick={this.props.handleNodeClick}
+            />
             <span className={"pt-navbar-divider"} />
             <DropDownMenu
               toggleTheme={this.props.toggleTheme}
