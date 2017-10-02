@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <a href="https://github.com/stoex/mergepdf"><img src="https://raw.githubusercontent.com/stoex/mergePDF/add-docs/src/assets/icon.png" alt="MDedit" width="200"></a>
+  <a href="https://github.com/stoex/mergepdf"><img src="https://raw.githubusercontent.com/stoex/mergePDF/master/src/assets/icon.png" alt="mergepdf-icon" width="200"></a>
   <br>
   <br>
     MergePDF
