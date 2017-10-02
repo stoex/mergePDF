@@ -1,22 +1,22 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import FolderTree from "./FolderTree";
-import MergeList from "./MergeList";
-import OptionDialog from "./OptionDialog";
-import NoFolderSelection from "./NoFolderSelection";
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import FolderTree from './FolderTree'
+import MergeList from './MergeList'
+import OptionDialog from './OptionDialog'
+import NoFolderSelection from './NoFolderSelection'
 
 class ContentArea extends Component {
-  render() {
+  render () {
     if (this.props.nodes.length === 0) {
       return (
-        <div className={"list"}>
+        <div className={'list'}>
           <NoFolderSelection />
         </div>
-      );
+      )
     } else {
       return (
-        <div className={"row content"}>
-          <div className={"col-xs-12 col-lg-4"}>
+        <div className={'row content'}>
+          <div className={'col-xs-12 col-lg-4'}>
             <FolderTree
               nodes={this.props.nodes}
               handleNodeClick={this.props.handleNodeClick}
@@ -26,14 +26,14 @@ class ContentArea extends Component {
               collapseAll={this.props.collapseAll}
             />
           </div>
-          <div className={"col-xs-12 col-lg-8 list"}>
+          <div className={'col-xs-12 col-lg-8 list'}>
             <MergeList
               merge={this.props.merge}
               onSortEnd={this.props.onSortEnd}
               openFile={this.props.openFile}
               removeFromMergeList={this.props.removeFromMergeList}
               toggleDialog={this.props.toggleDialog}
-              className="SortableList"
+              className='SortableList'
               theme={this.props.theme}
             />
             {this.props.merge.map(o => {
@@ -55,14 +55,14 @@ class ContentArea extends Component {
                     range={o.range}
                     pages={o.pages}
                   />
-                );
+                )
               } else {
-                return null;
+                return null
               }
             })}
           </div>
         </div>
-      );
+      )
     }
   }
 }
@@ -83,6 +83,6 @@ ContentArea.propTypes = {
   pageRangeSelectionHandler: PropTypes.func.isRequired,
   optionSelectionHandler: PropTypes.func.isRequired,
   theme: PropTypes.bool.isRequired
-};
+}
 
-export default ContentArea;
+export default ContentArea
