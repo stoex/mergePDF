@@ -4,11 +4,12 @@
   "version": "1.0.0",
   "author": "Christian Nicola",
   "devDependencies": {
+    "babel-eslint": "^8.0.1",
     "concurrently": "^3.5.0",
     "electron": "^1.4.14",
     "electron-builder": "^19.27.7",
     "electron-devtools-installer": "^2.2.0",
-    "react-scripts": "0.8.5",
+    "standard": "^10.0.3",
     "wait-on": "^2.0.2"
   },
   "dependencies": {
@@ -36,14 +37,21 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "dev":
-      "concurrently \"npm start\" \"wait-on http://localhost:3000 && electron .\"",
+    "dev": "concurrently \"npm start\" \"wait-on http://localhost:3000 && electron .\"",
     "electron-pack": "build --em.main=build/electron.js",
     "postinstall": "electron-builder install-app-deps"
   },
   "build": {
     "appId": "com.example.mergepdf",
-    "files": ["build/**/*", "node_modules/**/*"],
-    "extraFiles": ["libs/**/*"]
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "extraFiles": [
+      "libs/**/*"
+    ]
+  },
+  "standard": {
+    "parser": "babel-eslint"
   }
 }

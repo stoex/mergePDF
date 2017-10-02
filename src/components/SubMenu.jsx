@@ -1,34 +1,34 @@
-import React, { Component } from "react";
-import { Menu, MenuItem, MenuDivider } from "@blueprintjs/core";
+import React, { Component } from 'react'
+import { Menu, MenuItem, MenuDivider } from '@blueprintjs/core'
 
 class SubMenu extends Component {
-  render() {
+  render () {
     return (
       <Menu>
         <MenuItem
-          iconName="new-text-box"
+          iconName='new-text-box'
           onClick={this.handleClick}
-          text="New text box"
+          text='New text box'
         />
         <MenuItem
-          iconName="new-object"
+          iconName='new-object'
           onClick={this.handleClick}
-          text="New object"
+          text='New object'
         />
         <MenuItem
-          iconName="new-link"
+          iconName='new-link'
           onClick={this.handleClick}
-          text="New link"
+          text='New link'
         />
         <MenuDivider />
-        <MenuItem text="Settings..." iconName="cog" />
+        <MenuItem text='Settings...' iconName='cog' />
       </Menu>
-    );
+    )
   }
 
-  handleClick(e) {
-    console.log("clicked", e.target.textContent);
+  handleClick (e) {
+    console.log('clicked', e.target.textContent)
   }
 }
 
-export default SubMenu;
+export default SubMenu
