@@ -3,7 +3,6 @@ const Path = require('path')
 const fs = require('fs')
 const os = require('os').platform()
 const glob = require('glob')
-const log = require('electron-log')
 const PDFJS = require('pdfjs-dist')
 const PDFMerge = require('./merge')
 const app = electron.app
@@ -252,9 +251,6 @@ const merge = (newFile, files) => {
     .catch(
       err => {
         console.log(err)
-      },
-      err => {
-        log.error(err)
       }
     )
 }
